@@ -2476,7 +2476,7 @@
     "row": 1122,
     "col": "percentage",
     "raw_value": "excel=0.4568, calc=0.3827",
-    "description": "Исходный процент расходится с вычисленным unsent/total",
+    "description": "Исходный процент расходится с вычисленным отношением unsent/total",
     "action": "requires_review"
   },
   {
@@ -2486,7 +2486,7 @@
     "row": 2212,
     "col": "percentage",
     "raw_value": "excel=0.8000, calc=0.2000",
-    "description": "Исходный процент расходится с вычисленным unsent/total",
+    "description": "Исходный процент расходится с вычисленным отношением unsent/total",
     "action": "requires_review"
   }
 ]

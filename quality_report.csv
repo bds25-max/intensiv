@@ -246,5 +246,5 @@ UNKNOWN_CLIENT_ID,Срез 20.10.26_Дубна.xlsx,3 кв 2026,3404,A,IHT18828,
 UNKNOWN_CLIENT_ID,Срез 20.10.26_Дубна.xlsx,3 кв 2026,3405,A,UXX18078,Клиент UXX18078 отсутствует в основной базе клиентов,blocked
 UNKNOWN_CLIENT_ID,Срез 20.10.26_Дубна.xlsx,3 кв 2026,3406,A,CBA33826,Клиент CBA33826 отсутствует в основной базе клиентов,blocked
 MISSING_CLIENT_ID,База должники III кв 2025 Дубна.xlsx,1-3 кв 25,297,A,,Служебная или итоговая строка без идентификатора клиента,skipped
-PERCENTAGE_MISMATCH,КЦР_последняя выгрузка_Дубна.xlsx,Все КЦР,1122,percentage,"excel=0.4568, calc=0.3827",Исходный процент расходится с вычисленным unsent/total,requires_review
-PERCENTAGE_MISMATCH,КЦР_последняя выгрузка_Дубна.xlsx,Все КЦР,2212,percentage,"excel=0.8000, calc=0.2000",Исходный процент расходится с вычисленным unsent/total,requires_review
+PERCENTAGE_MISMATCH,КЦР_последняя выгрузка_Дубна.xlsx,Все КЦР,1122,percentage,"excel=0.4568, calc=0.3827",Исходный процент расходится с вычисленным отношением unsent/total,requires_review
+PERCENTAGE_MISMATCH,КЦР_последняя выгрузка_Дубна.xlsx,Все КЦР,2212,percentage,"excel=0.8000, calc=0.2000",Исходный процент расходится с вычисленным отношением unsent/total,requires_review
