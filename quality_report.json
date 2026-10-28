@@ -1,0 +1,2492 @@
+[
+  {
+    "code": "MISSING_CLIENT_ID",
+    "file": "КЦР_последняя выгрузка_Дубна.xlsx",
+    "sheet": "Все КЦР",
+    "row": 5877,
+    "col": "A",
+    "raw_value": null,
+    "description": "Служебная или итоговая строка без идентификатора клиента",
+    "action": "skipped"
+  },
+  {
+    "code": "DUPLICATE_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "весь 2025 год",
+    "row": 1258,
+    "col": "A",
+    "raw_value": "ISE83063",
+    "description": "Дублирующийся идентификатор в рамках одного листа: ISE83063",
+    "action": "requires_review"
+  },
+  {
+    "code": "DUPLICATE_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "1 кв 2026",
+    "row": 1064,
+    "col": "A",
+    "raw_value": "ISE83063",
+    "description": "Дублирующийся идентификатор в рамках одного листа: ISE83063",
+    "action": "requires_review"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3164,
+    "col": "A",
+    "raw_value": "BNX78868",
+    "description": "Клиент BNX78868 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3165,
+    "col": "A",
+    "raw_value": "IUA62107",
+    "description": "Клиент IUA62107 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3166,
+    "col": "A",
+    "raw_value": "IBX31705",
+    "description": "Клиент IBX31705 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3167,
+    "col": "A",
+    "raw_value": "GNI19331",
+    "description": "Клиент GNI19331 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3168,
+    "col": "A",
+    "raw_value": "CLR45852",
+    "description": "Клиент CLR45852 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3169,
+    "col": "A",
+    "raw_value": "MIV89976",
+    "description": "Клиент MIV89976 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3170,
+    "col": "A",
+    "raw_value": "ZHA56385",
+    "description": "Клиент ZHA56385 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3171,
+    "col": "A",
+    "raw_value": "KVG09542",
+    "description": "Клиент KVG09542 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3172,
+    "col": "A",
+    "raw_value": "BUD49475",
+    "description": "Клиент BUD49475 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3173,
+    "col": "A",
+    "raw_value": "ORY57109",
+    "description": "Клиент ORY57109 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3174,
+    "col": "A",
+    "raw_value": "XRQ15226",
+    "description": "Клиент XRQ15226 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3175,
+    "col": "A",
+    "raw_value": "SKR57427",
+    "description": "Клиент SKR57427 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3176,
+    "col": "A",
+    "raw_value": "JSD61969",
+    "description": "Клиент JSD61969 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3177,
+    "col": "A",
+    "raw_value": "YDN08616",
+    "description": "Клиент YDN08616 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3178,
+    "col": "A",
+    "raw_value": "YHK02910",
+    "description": "Клиент YHK02910 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3179,
+    "col": "A",
+    "raw_value": "KXA35260",
+    "description": "Клиент KXA35260 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3180,
+    "col": "A",
+    "raw_value": "ATR98068",
+    "description": "Клиент ATR98068 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3181,
+    "col": "A",
+    "raw_value": "UWL48386",
+    "description": "Клиент UWL48386 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3182,
+    "col": "A",
+    "raw_value": "YYO71951",
+    "description": "Клиент YYO71951 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3183,
+    "col": "A",
+    "raw_value": "PET90642",
+    "description": "Клиент PET90642 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3184,
+    "col": "A",
+    "raw_value": "ZIA53697",
+    "description": "Клиент ZIA53697 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3185,
+    "col": "A",
+    "raw_value": "FBJ60195",
+    "description": "Клиент FBJ60195 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3186,
+    "col": "A",
+    "raw_value": "DTC51031",
+    "description": "Клиент DTC51031 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3187,
+    "col": "A",
+    "raw_value": "YET62914",
+    "description": "Клиент YET62914 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3188,
+    "col": "A",
+    "raw_value": "MBX07402",
+    "description": "Клиент MBX07402 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3189,
+    "col": "A",
+    "raw_value": "RAP29287",
+    "description": "Клиент RAP29287 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3190,
+    "col": "A",
+    "raw_value": "VCH68029",
+    "description": "Клиент VCH68029 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3191,
+    "col": "A",
+    "raw_value": "ECQ33811",
+    "description": "Клиент ECQ33811 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3192,
+    "col": "A",
+    "raw_value": "LAK38376",
+    "description": "Клиент LAK38376 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3193,
+    "col": "A",
+    "raw_value": "VVA27739",
+    "description": "Клиент VVA27739 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3194,
+    "col": "A",
+    "raw_value": "YJS22434",
+    "description": "Клиент YJS22434 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3195,
+    "col": "A",
+    "raw_value": "ZVN83091",
+    "description": "Клиент ZVN83091 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3196,
+    "col": "A",
+    "raw_value": "TFZ96599",
+    "description": "Клиент TFZ96599 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3197,
+    "col": "A",
+    "raw_value": "BXN68743",
+    "description": "Клиент BXN68743 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3198,
+    "col": "A",
+    "raw_value": "RYR67770",
+    "description": "Клиент RYR67770 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3199,
+    "col": "A",
+    "raw_value": "BCX17579",
+    "description": "Клиент BCX17579 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3200,
+    "col": "A",
+    "raw_value": "WKW49002",
+    "description": "Клиент WKW49002 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3201,
+    "col": "A",
+    "raw_value": "BVQ56650",
+    "description": "Клиент BVQ56650 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3202,
+    "col": "A",
+    "raw_value": "OIS14316",
+    "description": "Клиент OIS14316 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3203,
+    "col": "A",
+    "raw_value": "GML39680",
+    "description": "Клиент GML39680 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3204,
+    "col": "A",
+    "raw_value": "TZQ73099",
+    "description": "Клиент TZQ73099 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3205,
+    "col": "A",
+    "raw_value": "GKC54941",
+    "description": "Клиент GKC54941 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3206,
+    "col": "A",
+    "raw_value": "QHS01223",
+    "description": "Клиент QHS01223 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3207,
+    "col": "A",
+    "raw_value": "KYK99916",
+    "description": "Клиент KYK99916 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3208,
+    "col": "A",
+    "raw_value": "PBO59747",
+    "description": "Клиент PBO59747 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3209,
+    "col": "A",
+    "raw_value": "NGK59079",
+    "description": "Клиент NGK59079 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3210,
+    "col": "A",
+    "raw_value": "QCS66073",
+    "description": "Клиент QCS66073 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3211,
+    "col": "A",
+    "raw_value": "UXD04896",
+    "description": "Клиент UXD04896 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3212,
+    "col": "A",
+    "raw_value": "EPT54609",
+    "description": "Клиент EPT54609 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3213,
+    "col": "A",
+    "raw_value": "EWR08987",
+    "description": "Клиент EWR08987 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3214,
+    "col": "A",
+    "raw_value": "MLO29865",
+    "description": "Клиент MLO29865 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3215,
+    "col": "A",
+    "raw_value": "RIW82690",
+    "description": "Клиент RIW82690 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3216,
+    "col": "A",
+    "raw_value": "RVE86275",
+    "description": "Клиент RVE86275 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3217,
+    "col": "A",
+    "raw_value": "QBM79992",
+    "description": "Клиент QBM79992 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3218,
+    "col": "A",
+    "raw_value": "KAP64950",
+    "description": "Клиент KAP64950 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3219,
+    "col": "A",
+    "raw_value": "XLK52375",
+    "description": "Клиент XLK52375 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3220,
+    "col": "A",
+    "raw_value": "KNW49066",
+    "description": "Клиент KNW49066 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3221,
+    "col": "A",
+    "raw_value": "VRP45604",
+    "description": "Клиент VRP45604 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3222,
+    "col": "A",
+    "raw_value": "RJZ33618",
+    "description": "Клиент RJZ33618 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3223,
+    "col": "A",
+    "raw_value": "ZNR11370",
+    "description": "Клиент ZNR11370 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3224,
+    "col": "A",
+    "raw_value": "VSA93428",
+    "description": "Клиент VSA93428 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3225,
+    "col": "A",
+    "raw_value": "DDB70278",
+    "description": "Клиент DDB70278 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3226,
+    "col": "A",
+    "raw_value": "BJU04282",
+    "description": "Клиент BJU04282 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3227,
+    "col": "A",
+    "raw_value": "YUV54739",
+    "description": "Клиент YUV54739 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3228,
+    "col": "A",
+    "raw_value": "ZGZ23608",
+    "description": "Клиент ZGZ23608 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3229,
+    "col": "A",
+    "raw_value": "ZRD64701",
+    "description": "Клиент ZRD64701 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3230,
+    "col": "A",
+    "raw_value": "WCM45871",
+    "description": "Клиент WCM45871 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3231,
+    "col": "A",
+    "raw_value": "OVD43724",
+    "description": "Клиент OVD43724 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3232,
+    "col": "A",
+    "raw_value": "PDU68161",
+    "description": "Клиент PDU68161 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3233,
+    "col": "A",
+    "raw_value": "BQZ48459",
+    "description": "Клиент BQZ48459 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3234,
+    "col": "A",
+    "raw_value": "PZA32234",
+    "description": "Клиент PZA32234 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3235,
+    "col": "A",
+    "raw_value": "QLS86135",
+    "description": "Клиент QLS86135 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3236,
+    "col": "A",
+    "raw_value": "KCI94699",
+    "description": "Клиент KCI94699 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3237,
+    "col": "A",
+    "raw_value": "NUA86613",
+    "description": "Клиент NUA86613 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3238,
+    "col": "A",
+    "raw_value": "OYE31485",
+    "description": "Клиент OYE31485 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3239,
+    "col": "A",
+    "raw_value": "PLP94715",
+    "description": "Клиент PLP94715 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3240,
+    "col": "A",
+    "raw_value": "WGV70083",
+    "description": "Клиент WGV70083 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3241,
+    "col": "A",
+    "raw_value": "ZXT19587",
+    "description": "Клиент ZXT19587 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3242,
+    "col": "A",
+    "raw_value": "MIU35698",
+    "description": "Клиент MIU35698 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3243,
+    "col": "A",
+    "raw_value": "BWE98492",
+    "description": "Клиент BWE98492 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3244,
+    "col": "A",
+    "raw_value": "ZYI65273",
+    "description": "Клиент ZYI65273 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3245,
+    "col": "A",
+    "raw_value": "LSH14266",
+    "description": "Клиент LSH14266 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3246,
+    "col": "A",
+    "raw_value": "NXG07903",
+    "description": "Клиент NXG07903 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3247,
+    "col": "A",
+    "raw_value": "XIZ17012",
+    "description": "Клиент XIZ17012 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3248,
+    "col": "A",
+    "raw_value": "IGL27729",
+    "description": "Клиент IGL27729 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3249,
+    "col": "A",
+    "raw_value": "EMI80238",
+    "description": "Клиент EMI80238 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3250,
+    "col": "A",
+    "raw_value": "PSF88278",
+    "description": "Клиент PSF88278 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3251,
+    "col": "A",
+    "raw_value": "CMQ82099",
+    "description": "Клиент CMQ82099 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3252,
+    "col": "A",
+    "raw_value": "AQM42849",
+    "description": "Клиент AQM42849 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3253,
+    "col": "A",
+    "raw_value": "BKF81271",
+    "description": "Клиент BKF81271 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3254,
+    "col": "A",
+    "raw_value": "YPA52705",
+    "description": "Клиент YPA52705 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3255,
+    "col": "A",
+    "raw_value": "KGQ05305",
+    "description": "Клиент KGQ05305 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3256,
+    "col": "A",
+    "raw_value": "QHK41222",
+    "description": "Клиент QHK41222 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3257,
+    "col": "A",
+    "raw_value": "DNS62114",
+    "description": "Клиент DNS62114 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3258,
+    "col": "A",
+    "raw_value": "RQV44411",
+    "description": "Клиент RQV44411 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3259,
+    "col": "A",
+    "raw_value": "KVE55666",
+    "description": "Клиент KVE55666 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3260,
+    "col": "A",
+    "raw_value": "ISD25433",
+    "description": "Клиент ISD25433 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3261,
+    "col": "A",
+    "raw_value": "FHM80217",
+    "description": "Клиент FHM80217 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3262,
+    "col": "A",
+    "raw_value": "OBE41956",
+    "description": "Клиент OBE41956 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3263,
+    "col": "A",
+    "raw_value": "AQQ61675",
+    "description": "Клиент AQQ61675 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3264,
+    "col": "A",
+    "raw_value": "ZLE52629",
+    "description": "Клиент ZLE52629 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3265,
+    "col": "A",
+    "raw_value": "UTO09586",
+    "description": "Клиент UTO09586 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3266,
+    "col": "A",
+    "raw_value": "PCL08764",
+    "description": "Клиент PCL08764 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3267,
+    "col": "A",
+    "raw_value": "CKD60539",
+    "description": "Клиент CKD60539 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3268,
+    "col": "A",
+    "raw_value": "HMG65781",
+    "description": "Клиент HMG65781 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3269,
+    "col": "A",
+    "raw_value": "YHO34977",
+    "description": "Клиент YHO34977 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3270,
+    "col": "A",
+    "raw_value": "PIR15077",
+    "description": "Клиент PIR15077 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3271,
+    "col": "A",
+    "raw_value": "VVV55985",
+    "description": "Клиент VVV55985 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3272,
+    "col": "A",
+    "raw_value": "SBR28537",
+    "description": "Клиент SBR28537 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3273,
+    "col": "A",
+    "raw_value": "IGC74188",
+    "description": "Клиент IGC74188 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3274,
+    "col": "A",
+    "raw_value": "QMV33052",
+    "description": "Клиент QMV33052 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3275,
+    "col": "A",
+    "raw_value": "BMB19058",
+    "description": "Клиент BMB19058 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3276,
+    "col": "A",
+    "raw_value": "PGI65887",
+    "description": "Клиент PGI65887 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3277,
+    "col": "A",
+    "raw_value": "OOF76627",
+    "description": "Клиент OOF76627 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3278,
+    "col": "A",
+    "raw_value": "RHI75796",
+    "description": "Клиент RHI75796 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3279,
+    "col": "A",
+    "raw_value": "XCC61544",
+    "description": "Клиент XCC61544 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3280,
+    "col": "A",
+    "raw_value": "RYY11415",
+    "description": "Клиент RYY11415 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3281,
+    "col": "A",
+    "raw_value": "STQ20156",
+    "description": "Клиент STQ20156 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3282,
+    "col": "A",
+    "raw_value": "LRP81924",
+    "description": "Клиент LRP81924 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3283,
+    "col": "A",
+    "raw_value": "WIO05629",
+    "description": "Клиент WIO05629 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3284,
+    "col": "A",
+    "raw_value": "MQP12771",
+    "description": "Клиент MQP12771 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3285,
+    "col": "A",
+    "raw_value": "ZFJ68998",
+    "description": "Клиент ZFJ68998 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3286,
+    "col": "A",
+    "raw_value": "GDQ48682",
+    "description": "Клиент GDQ48682 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3287,
+    "col": "A",
+    "raw_value": "HXX88275",
+    "description": "Клиент HXX88275 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3288,
+    "col": "A",
+    "raw_value": "BWW28617",
+    "description": "Клиент BWW28617 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3289,
+    "col": "A",
+    "raw_value": "RTT48781",
+    "description": "Клиент RTT48781 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3290,
+    "col": "A",
+    "raw_value": "TJM40442",
+    "description": "Клиент TJM40442 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3291,
+    "col": "A",
+    "raw_value": "ITR99609",
+    "description": "Клиент ITR99609 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3292,
+    "col": "A",
+    "raw_value": "UMW26150",
+    "description": "Клиент UMW26150 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3293,
+    "col": "A",
+    "raw_value": "WWE39733",
+    "description": "Клиент WWE39733 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3294,
+    "col": "A",
+    "raw_value": "VRL77664",
+    "description": "Клиент VRL77664 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3295,
+    "col": "A",
+    "raw_value": "VAY42652",
+    "description": "Клиент VAY42652 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3296,
+    "col": "A",
+    "raw_value": "QQL57031",
+    "description": "Клиент QQL57031 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3297,
+    "col": "A",
+    "raw_value": "JKY09017",
+    "description": "Клиент JKY09017 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3298,
+    "col": "A",
+    "raw_value": "SNU41451",
+    "description": "Клиент SNU41451 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3299,
+    "col": "A",
+    "raw_value": "ACV26932",
+    "description": "Клиент ACV26932 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3300,
+    "col": "A",
+    "raw_value": "CCE51305",
+    "description": "Клиент CCE51305 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3301,
+    "col": "A",
+    "raw_value": "YCH55241",
+    "description": "Клиент YCH55241 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3302,
+    "col": "A",
+    "raw_value": "THQ19607",
+    "description": "Клиент THQ19607 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3303,
+    "col": "A",
+    "raw_value": "YFC26195",
+    "description": "Клиент YFC26195 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3304,
+    "col": "A",
+    "raw_value": "XYI14502",
+    "description": "Клиент XYI14502 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3305,
+    "col": "A",
+    "raw_value": "NFP88102",
+    "description": "Клиент NFP88102 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3306,
+    "col": "A",
+    "raw_value": "HVC67471",
+    "description": "Клиент HVC67471 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3307,
+    "col": "A",
+    "raw_value": "WIU70192",
+    "description": "Клиент WIU70192 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3308,
+    "col": "A",
+    "raw_value": "VVR39652",
+    "description": "Клиент VVR39652 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3309,
+    "col": "A",
+    "raw_value": "YQU98110",
+    "description": "Клиент YQU98110 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3310,
+    "col": "A",
+    "raw_value": "VFC20370",
+    "description": "Клиент VFC20370 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3311,
+    "col": "A",
+    "raw_value": "MID96664",
+    "description": "Клиент MID96664 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3312,
+    "col": "A",
+    "raw_value": "OWF82536",
+    "description": "Клиент OWF82536 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3313,
+    "col": "A",
+    "raw_value": "IHA25519",
+    "description": "Клиент IHA25519 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3314,
+    "col": "A",
+    "raw_value": "UST51813",
+    "description": "Клиент UST51813 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3315,
+    "col": "A",
+    "raw_value": "FLS36327",
+    "description": "Клиент FLS36327 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3316,
+    "col": "A",
+    "raw_value": "EFI64866",
+    "description": "Клиент EFI64866 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3317,
+    "col": "A",
+    "raw_value": "BWY00084",
+    "description": "Клиент BWY00084 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3318,
+    "col": "A",
+    "raw_value": "ZHM99471",
+    "description": "Клиент ZHM99471 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3319,
+    "col": "A",
+    "raw_value": "RTC31340",
+    "description": "Клиент RTC31340 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3320,
+    "col": "A",
+    "raw_value": "POF55225",
+    "description": "Клиент POF55225 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3321,
+    "col": "A",
+    "raw_value": "JCO16302",
+    "description": "Клиент JCO16302 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3322,
+    "col": "A",
+    "raw_value": "EUQ61874",
+    "description": "Клиент EUQ61874 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3323,
+    "col": "A",
+    "raw_value": "CRT55052",
+    "description": "Клиент CRT55052 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3324,
+    "col": "A",
+    "raw_value": "BDD55547",
+    "description": "Клиент BDD55547 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3325,
+    "col": "A",
+    "raw_value": "TOQ90436",
+    "description": "Клиент TOQ90436 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3326,
+    "col": "A",
+    "raw_value": "MOF09053",
+    "description": "Клиент MOF09053 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3327,
+    "col": "A",
+    "raw_value": "SPE21822",
+    "description": "Клиент SPE21822 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3328,
+    "col": "A",
+    "raw_value": "VSB17422",
+    "description": "Клиент VSB17422 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3329,
+    "col": "A",
+    "raw_value": "OIP14436",
+    "description": "Клиент OIP14436 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3330,
+    "col": "A",
+    "raw_value": "PHS84107",
+    "description": "Клиент PHS84107 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3331,
+    "col": "A",
+    "raw_value": "SUZ06904",
+    "description": "Клиент SUZ06904 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3332,
+    "col": "A",
+    "raw_value": "ZFF18281",
+    "description": "Клиент ZFF18281 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3333,
+    "col": "A",
+    "raw_value": "MVN53098",
+    "description": "Клиент MVN53098 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3334,
+    "col": "A",
+    "raw_value": "VEK27746",
+    "description": "Клиент VEK27746 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3335,
+    "col": "A",
+    "raw_value": "KZS81416",
+    "description": "Клиент KZS81416 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3336,
+    "col": "A",
+    "raw_value": "AJH82785",
+    "description": "Клиент AJH82785 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3337,
+    "col": "A",
+    "raw_value": "QED98465",
+    "description": "Клиент QED98465 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3338,
+    "col": "A",
+    "raw_value": "SEJ01757",
+    "description": "Клиент SEJ01757 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3339,
+    "col": "A",
+    "raw_value": "KGA80183",
+    "description": "Клиент KGA80183 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3340,
+    "col": "A",
+    "raw_value": "FLD70553",
+    "description": "Клиент FLD70553 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3341,
+    "col": "A",
+    "raw_value": "ZXX99187",
+    "description": "Клиент ZXX99187 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3342,
+    "col": "A",
+    "raw_value": "WUK78295",
+    "description": "Клиент WUK78295 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3343,
+    "col": "A",
+    "raw_value": "CLA84767",
+    "description": "Клиент CLA84767 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3344,
+    "col": "A",
+    "raw_value": "JCI35336",
+    "description": "Клиент JCI35336 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3345,
+    "col": "A",
+    "raw_value": "GHH97236",
+    "description": "Клиент GHH97236 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3346,
+    "col": "A",
+    "raw_value": "QCN43677",
+    "description": "Клиент QCN43677 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3347,
+    "col": "A",
+    "raw_value": "ESX13244",
+    "description": "Клиент ESX13244 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3348,
+    "col": "A",
+    "raw_value": "BJK52179",
+    "description": "Клиент BJK52179 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3349,
+    "col": "A",
+    "raw_value": "JAE34197",
+    "description": "Клиент JAE34197 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3350,
+    "col": "A",
+    "raw_value": "KSA50625",
+    "description": "Клиент KSA50625 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3351,
+    "col": "A",
+    "raw_value": "ETB26178",
+    "description": "Клиент ETB26178 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3352,
+    "col": "A",
+    "raw_value": "NRF35289",
+    "description": "Клиент NRF35289 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3353,
+    "col": "A",
+    "raw_value": "DRG34745",
+    "description": "Клиент DRG34745 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3354,
+    "col": "A",
+    "raw_value": "JJP71441",
+    "description": "Клиент JJP71441 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3355,
+    "col": "A",
+    "raw_value": "HYZ01915",
+    "description": "Клиент HYZ01915 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3356,
+    "col": "A",
+    "raw_value": "EOV33808",
+    "description": "Клиент EOV33808 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3357,
+    "col": "A",
+    "raw_value": "PAY89205",
+    "description": "Клиент PAY89205 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3358,
+    "col": "A",
+    "raw_value": "LEV02104",
+    "description": "Клиент LEV02104 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3359,
+    "col": "A",
+    "raw_value": "ADA72006",
+    "description": "Клиент ADA72006 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3360,
+    "col": "A",
+    "raw_value": "LQA97176",
+    "description": "Клиент LQA97176 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3361,
+    "col": "A",
+    "raw_value": "KEN73640",
+    "description": "Клиент KEN73640 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3362,
+    "col": "A",
+    "raw_value": "MGB03204",
+    "description": "Клиент MGB03204 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3363,
+    "col": "A",
+    "raw_value": "EKC74336",
+    "description": "Клиент EKC74336 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3364,
+    "col": "A",
+    "raw_value": "WWF30887",
+    "description": "Клиент WWF30887 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3365,
+    "col": "A",
+    "raw_value": "WHR88582",
+    "description": "Клиент WHR88582 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3366,
+    "col": "A",
+    "raw_value": "YZN15379",
+    "description": "Клиент YZN15379 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3367,
+    "col": "A",
+    "raw_value": "HBN16644",
+    "description": "Клиент HBN16644 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3368,
+    "col": "A",
+    "raw_value": "GTS15534",
+    "description": "Клиент GTS15534 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3369,
+    "col": "A",
+    "raw_value": "JUI93695",
+    "description": "Клиент JUI93695 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3370,
+    "col": "A",
+    "raw_value": "ZFK51318",
+    "description": "Клиент ZFK51318 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3371,
+    "col": "A",
+    "raw_value": "SXO28282",
+    "description": "Клиент SXO28282 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3372,
+    "col": "A",
+    "raw_value": "ZDL74858",
+    "description": "Клиент ZDL74858 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3373,
+    "col": "A",
+    "raw_value": "JMG84074",
+    "description": "Клиент JMG84074 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3374,
+    "col": "A",
+    "raw_value": "NKR33857",
+    "description": "Клиент NKR33857 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3375,
+    "col": "A",
+    "raw_value": "WEB70549",
+    "description": "Клиент WEB70549 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3376,
+    "col": "A",
+    "raw_value": "OAK58584",
+    "description": "Клиент OAK58584 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3377,
+    "col": "A",
+    "raw_value": "KQZ15684",
+    "description": "Клиент KQZ15684 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3378,
+    "col": "A",
+    "raw_value": "RXI37648",
+    "description": "Клиент RXI37648 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3379,
+    "col": "A",
+    "raw_value": "JOL16496",
+    "description": "Клиент JOL16496 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3380,
+    "col": "A",
+    "raw_value": "MPY93717",
+    "description": "Клиент MPY93717 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3381,
+    "col": "A",
+    "raw_value": "MHF04452",
+    "description": "Клиент MHF04452 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3382,
+    "col": "A",
+    "raw_value": "LMU94899",
+    "description": "Клиент LMU94899 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3383,
+    "col": "A",
+    "raw_value": "OWQ03533",
+    "description": "Клиент OWQ03533 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3384,
+    "col": "A",
+    "raw_value": "EMM50190",
+    "description": "Клиент EMM50190 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3385,
+    "col": "A",
+    "raw_value": "AGB62125",
+    "description": "Клиент AGB62125 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3386,
+    "col": "A",
+    "raw_value": "DBO92866",
+    "description": "Клиент DBO92866 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3387,
+    "col": "A",
+    "raw_value": "MHJ49684",
+    "description": "Клиент MHJ49684 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3388,
+    "col": "A",
+    "raw_value": "NUC88339",
+    "description": "Клиент NUC88339 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3389,
+    "col": "A",
+    "raw_value": "NTT02231",
+    "description": "Клиент NTT02231 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3390,
+    "col": "A",
+    "raw_value": "IKR24766",
+    "description": "Клиент IKR24766 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3391,
+    "col": "A",
+    "raw_value": "YDV38851",
+    "description": "Клиент YDV38851 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3392,
+    "col": "A",
+    "raw_value": "SFS09600",
+    "description": "Клиент SFS09600 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3393,
+    "col": "A",
+    "raw_value": "YYW03118",
+    "description": "Клиент YYW03118 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3394,
+    "col": "A",
+    "raw_value": "EVI35168",
+    "description": "Клиент EVI35168 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3395,
+    "col": "A",
+    "raw_value": "XUM48186",
+    "description": "Клиент XUM48186 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3396,
+    "col": "A",
+    "raw_value": "QFK05240",
+    "description": "Клиент QFK05240 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3397,
+    "col": "A",
+    "raw_value": "UWQ49457",
+    "description": "Клиент UWQ49457 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3398,
+    "col": "A",
+    "raw_value": "TLB21976",
+    "description": "Клиент TLB21976 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3399,
+    "col": "A",
+    "raw_value": "QRN49240",
+    "description": "Клиент QRN49240 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3400,
+    "col": "A",
+    "raw_value": "XQF72781",
+    "description": "Клиент XQF72781 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3401,
+    "col": "A",
+    "raw_value": "ARZ40279",
+    "description": "Клиент ARZ40279 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3402,
+    "col": "A",
+    "raw_value": "QVN19185",
+    "description": "Клиент QVN19185 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3403,
+    "col": "A",
+    "raw_value": "LUL42467",
+    "description": "Клиент LUL42467 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3404,
+    "col": "A",
+    "raw_value": "IHT18828",
+    "description": "Клиент IHT18828 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3405,
+    "col": "A",
+    "raw_value": "UXX18078",
+    "description": "Клиент UXX18078 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "UNKNOWN_CLIENT_ID",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "3 кв 2026",
+    "row": 3406,
+    "col": "A",
+    "raw_value": "CBA33826",
+    "description": "Клиент CBA33826 отсутствует в основной базе клиентов",
+    "action": "blocked"
+  },
+  {
+    "code": "MISSING_CLIENT_ID",
+    "file": "База должники III кв 2025 Дубна.xlsx",
+    "sheet": "1-3 кв 25",
+    "row": 297,
+    "col": "A",
+    "raw_value": null,
+    "description": "Служебная или итоговая строка без идентификатора клиента",
+    "action": "skipped"
+  },
+  {
+    "code": "PERCENTAGE_MISMATCH",
+    "file": "КЦР_последняя выгрузка_Дубна.xlsx",
+    "sheet": "Все КЦР",
+    "row": 1122,
+    "col": "percentage",
+    "raw_value": "excel=0.4568, calc=0.3827",
+    "description": "Исходный процент расходится с вычисленным unsent/total",
+    "action": "requires_review"
+  },
+  {
+    "code": "PERCENTAGE_MISMATCH",
+    "file": "КЦР_последняя выгрузка_Дубна.xlsx",
+    "sheet": "Все КЦР",
+    "row": 2212,
+    "col": "percentage",
+    "raw_value": "excel=0.8000, calc=0.2000",
+    "description": "Исходный процент расходится с вычисленным unsent/total",
+    "action": "requires_review"
+  }
+]
