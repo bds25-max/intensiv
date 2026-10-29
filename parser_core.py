@@ -1,6 +1,7 @@
 """
 parser_core.py — ETL-модуль разбора Excel и нормализации в единый JSON-контракт.
 Контур КЦР. Задача 1.
+Без маскирования и искусственного обезличивания: все тексты, комментарии и атрибуты сохраняются дословно.
 """
 
 from __future__ import annotations
@@ -9,28 +10,12 @@ import sys
 import json
 import csv
 import re
+import math
 import shutil
 from dataclasses import dataclass, asdict
 from datetime import datetime, date
 from typing import Any, Dict, List, Optional, Tuple, Set
 import openpyxl
-
-
-PHONE_REGEX = re.compile(
-    r"(?:(?:\+7|8)[\s\-]?\(?\d{3,5}\)?[\s\-]?\d{2,3}[\s\-]?\d{2}[\s\-]?\d{2})"
-    r"|(?:\(\d{4,5}\)\s*\d{2,3}[\s\-]?\d{2,3})"
-    r"|(?:\b\d{3}[\s\-]\d{2}[\s\-]\d{2}\b)"
-)
-
-
-def sanitize_contact_text(val: Optional[str]) -> Optional[str]:
-    """Маскирует телефоноподобные последовательности в свободных текстовых полях."""
-    if val is None:
-        return None
-    cleaned = val.strip()
-    if not cleaned:
-        return None
-    return PHONE_REGEX.sub("[ТЕЛЕФОН_СКРЫТ]", cleaned)
 
 
 @dataclass
@@ -96,10 +81,13 @@ class QualityIssue:
 # =====================================================================
 
 def clean_optional_str(val: Any) -> Optional[str]:
+    """Преобразует непустое значение в строку без изменений содержимого."""
     if val is None:
         return None
     if isinstance(val, (datetime, date)):
         return val.strftime("%Y-%m-%d")
+    if isinstance(val, float) and val.is_integer():
+        return str(int(val))
     s = str(val).strip()
     return s if s != "" else None
 
@@ -134,7 +122,7 @@ def is_valid_iso_date(val: Any) -> bool:
 
 
 def parse_strict_int(val: Any) -> Tuple[Optional[int], Optional[str]]:
-    """Возвращает (число, ошибка). Не округляет дробные и не заменяет текст на null."""
+    """Возвращает (число, ошибка). Отклоняет NaN/Inf, дробные и нечисловые строки."""
     if val is None or str(val).strip() == "":
         return None, None
     if isinstance(val, bool):
@@ -142,12 +130,16 @@ def parse_strict_int(val: Any) -> Tuple[Optional[int], Optional[str]]:
     if isinstance(val, int):
         return val, None
     if isinstance(val, float):
+        if not math.isfinite(val):
+            return None, f"NON_FINITE_NUMBER:{val}"
         if val.is_integer():
             return int(val), None
         return None, f"FRACTIONAL_NUMBER:{val}"
     val_str = str(val).strip().replace(" ", "").replace(",", ".")
     try:
         f_val = float(val_str)
+        if not math.isfinite(f_val):
+            return None, f"NON_FINITE_NUMBER:{val}"
         if f_val.is_integer():
             return int(f_val), None
         return None, f"FRACTIONAL_NUMBER:{val}"
@@ -156,21 +148,30 @@ def parse_strict_int(val: Any) -> Tuple[Optional[int], Optional[str]]:
 
 
 def parse_strict_float(val: Any) -> Tuple[Optional[float], Optional[str]]:
-    """Строгий разбор вещественного числа (процента). Фиксирует #N/A и текстовые ошибки."""
+    """Строгий разбор вещественного числа (процента). Отклоняет NaN, Infinity, #N/A и текст."""
     if val is None or str(val).strip() == "":
         return None, None
     if isinstance(val, bool):
         return None, f"BOOLEAN_IN_FLOAT_FIELD:{val}"
     if isinstance(val, (int, float)):
-        return float(val), None
+        f_val = float(val)
+        if not math.isfinite(f_val):
+            return None, f"NON_FINITE_FLOAT:{val}"
+        return f_val, None
     val_str = str(val).strip().replace(" ", "").replace(",", ".")
     if val_str.endswith("%"):
         try:
-            return float(val_str[:-1]) / 100.0, None
+            f_val = float(val_str[:-1]) / 100.0
+            if not math.isfinite(f_val):
+                return None, f"NON_FINITE_FLOAT:{val}"
+            return f_val, None
         except ValueError:
             return None, f"INVALID_FLOAT_STRING:{val}"
     try:
-        return float(val_str), None
+        f_val = float(val_str)
+        if not math.isfinite(f_val):
+            return None, f"NON_FINITE_FLOAT:{val}"
+        return f_val, None
     except ValueError:
         return None, f"INVALID_FLOAT_STRING:{val}"
 
@@ -187,6 +188,14 @@ def detect_header_row(ws: openpyxl.worksheet.worksheet.Worksheet, max_scan: int 
     return best_row
 
 
+def normalize_header_for_match(text: str) -> str:
+    """Нормализует пробелы и дефисы для точной сверки периода и даты в заголовке."""
+    s = (text or "").strip().lower()
+    s = re.sub(r"\s*-\s*", "-", s)
+    s = re.sub(r"\s+", " ", s)
+    return s
+
+
 def verify_header_tokens(
     ws: openpyxl.worksheet.worksheet.Worksheet,
     h_row: int,
@@ -194,12 +203,13 @@ def verify_header_tokens(
     filename: str,
     sheetname: str
 ) -> None:
-    """Проверяет, что в заголовках указанных колонок присутствуют все ожидаемые смысловые фрагменты."""
+    """Проверяет, что в заголовках указанных колонок присутствуют все ожидаемые смысловые фрагменты (включая период и дату)."""
     for col_idx, tokens in expected_tokens.items():
-        raw_h = str(ws.cell(h_row, col_idx).value or "").strip().lower()
+        raw_h = normalize_header_for_match(str(ws.cell(h_row, col_idx).value or ""))
         col_letter = openpyxl.utils.get_column_letter(col_idx)
         for tok in tokens:
-            if tok.lower() not in raw_h:
+            norm_tok = normalize_header_for_match(tok)
+            if norm_tok not in raw_h:
                 raise ValueError(
                     f"Структура {filename} (лист '{sheetname}') нарушена в колонке {col_letter} (столбец {col_idx}): "
                     f"ожидался фрагмент '{tok}', фактически '{ws.cell(h_row, col_idx).value}'"
@@ -215,6 +225,72 @@ def extract_dates_from_header(header_text: str) -> List[str]:
         if iso:
             res.append(iso)
     return res
+
+
+def parse_slice_cell_triplet(
+    ws: openpyxl.worksheet.worksheet.Worksheet,
+    r: int,
+    c_tot: int,
+    c_uns: int,
+    c_pct: Optional[int],
+    cid: str,
+    p_start: str,
+    p_end: str,
+    as_of: str,
+    filename: str,
+    sheetname: str,
+    issues: List[QualityIssue],
+    base_rejection: Optional[str] = None
+) -> Optional[SliceRecord]:
+    """Единая точка извлечения и первичной числовой проверки тройки ячеек (total, unsent, raw_percentage)."""
+    raw_tot = ws.cell(r, c_tot).value
+    raw_uns = ws.cell(r, c_uns).value
+    raw_pct = ws.cell(r, c_pct).value if c_pct else None
+
+    if raw_tot is None and raw_uns is None:
+        return None
+
+    tot, err_tot = parse_strict_int(raw_tot)
+    uns, err_uns = parse_strict_int(raw_uns)
+    pct, err_pct = parse_strict_float(raw_pct) if c_pct else (None, None)
+
+    col_name = f"{openpyxl.utils.get_column_letter(c_tot)},{openpyxl.utils.get_column_letter(c_uns)}"
+    prov = Provenance(source_file=filename, source_sheet=sheetname, source_row=r, source_column=col_name)
+
+    rejection = base_rejection
+    if err_tot:
+        issues.append(QualityIssue(
+            code="INVALID_NUMERIC_TOTAL", file=filename, sheet=sheetname, row=r,
+            col=openpyxl.utils.get_column_letter(c_tot), raw_value=str(raw_tot),
+            description=f"Некорректное значение total: {err_tot}", action="requires_review"
+        ))
+        rejection = rejection or err_tot
+    if err_uns:
+        issues.append(QualityIssue(
+            code="INVALID_NUMERIC_UNSENT", file=filename, sheet=sheetname, row=r,
+            col=openpyxl.utils.get_column_letter(c_uns), raw_value=str(raw_uns),
+            description=f"Некорректное значение unsent: {err_uns}", action="requires_review"
+        ))
+        rejection = rejection or err_uns
+    if err_pct:
+        issues.append(QualityIssue(
+            code="INVALID_NUMERIC_PERCENTAGE", file=filename, sheet=sheetname, row=r,
+            col=openpyxl.utils.get_column_letter(c_pct), raw_value=str(raw_pct),
+            description=f"Некорректное значение процента: {err_pct}", action="requires_review"
+        ))
+        rejection = rejection or err_pct
+
+    return SliceRecord(
+        source_client_id=cid,
+        period_start=p_start,
+        period_end=p_end,
+        as_of_date=as_of,
+        total=tot,
+        unsent=uns,
+        raw_percentage=pct,
+        provenance=prov,
+        rejection_reason=rejection
+    )
 
 
 # =====================================================================
@@ -249,11 +325,11 @@ class BaseRegistryParser:
         (52, 53, 54, "2026-04-01", "2026-06-30", "2026-09-29", "2 кв 2026", "29.09.26"),
         (52, 55, 56, "2026-04-01", "2026-06-30", "2026-07-21", "2 кв 2026", "21.07.26"),
         # 3 кв 2025 - 2 кв 2026
-        (57, 58, 59, "2025-07-01", "2026-06-30", "2026-09-29", "3 кв 2025", "29.09.26"),
-        (57, 60, 61, "2025-07-01", "2026-06-30", "2026-07-21", "3 кв 2025", "21.07.26"),
+        (57, 58, 59, "2025-07-01", "2026-06-30", "2026-09-29", "3 кв 2025-2 кв 2026", "29.09.26"),
+        (57, 60, 61, "2025-07-01", "2026-06-30", "2026-07-21", "3 кв 2025-2 кв 2026", "21.07.26"),
         # весь 2025 - 2 кв 2026
-        (62, 63, 64, "2025-01-01", "2026-06-30", "2026-09-29", "весь 2025 - 2 кв 2026", "29.09.26"),
-        (62, 65, 66, "2025-01-01", "2026-06-30", "2026-07-21", "весь 2025 - 2 кв 2026", "21.07.26"),
+        (62, 63, 64, "2025-01-01", "2026-06-30", "2026-09-29", "весь 2025-2 кв 2026", "29.09.26"),
+        (62, 65, 66, "2025-01-01", "2026-06-30", "2026-07-21", "весь 2025-2 кв 2026", "21.07.26"),
     ]
 
     @classmethod
@@ -272,8 +348,8 @@ class BaseRegistryParser:
             }
             for c_tot, c_uns, c_pct, _, _, _, p_tok, d_tok in cls.SLICE_SPECS:
                 expected_headers[c_tot] = ["всего", p_tok]
-                expected_headers[c_uns] = ["долг", d_tok]
-                expected_headers[c_pct] = ["%", d_tok]
+                expected_headers[c_uns] = ["долг", p_tok, d_tok]
+                expected_headers[c_pct] = ["%", p_tok, d_tok]
 
             verify_header_tokens(ws, h_row, expected_headers, filename, "Все КЦР")
 
@@ -304,51 +380,16 @@ class BaseRegistryParser:
                         is_active=clean_optional_str(ws.cell(r, 10).value),
                         is_blocked=clean_optional_str(ws.cell(r, 11).value),
                         time_zone_offset=None,
-                        admin_name=None,
+                        admin_name=clean_optional_str(ws.cell(r, 12).value) or clean_optional_str(ws.cell(r, 13).value),
                         provenance=Provenance(source_file=filename, source_sheet="Все КЦР", source_row=r)
                     )
 
                 for c_tot, c_uns, c_pct, p_start, p_end, as_of, _, _ in cls.SLICE_SPECS:
-                    raw_tot = ws.cell(r, c_tot).value
-                    raw_uns = ws.cell(r, c_uns).value
-                    raw_pct = ws.cell(r, c_pct).value
-
-                    if raw_tot is None and raw_uns is None:
-                        continue
-
-                    tot, err_tot = parse_strict_int(raw_tot)
-                    uns, err_uns = parse_strict_int(raw_uns)
-                    pct, err_pct = parse_strict_float(raw_pct)
-
-                    col_name = f"{openpyxl.utils.get_column_letter(c_tot)},{openpyxl.utils.get_column_letter(c_uns)}"
-                    prov = Provenance(source_file=filename, source_sheet="Все КЦР", source_row=r, source_column=col_name)
-
-                    rejection = None
-                    if err_tot:
-                        issues.append(QualityIssue(
-                            code="INVALID_NUMERIC_TOTAL", file=filename, sheet="Все КЦР", row=r,
-                            col=openpyxl.utils.get_column_letter(c_tot), raw_value=str(raw_tot),
-                            description=f"Некорректное значение total: {err_tot}", action="requires_review"
-                        ))
-                        rejection = err_tot
-                    if err_uns:
-                        issues.append(QualityIssue(
-                            code="INVALID_NUMERIC_UNSENT", file=filename, sheet="Все КЦР", row=r,
-                            col=openpyxl.utils.get_column_letter(c_uns), raw_value=str(raw_uns),
-                            description=f"Некорректное значение unsent: {err_uns}", action="requires_review"
-                        ))
-                        rejection = rejection or err_uns
-                    if err_pct:
-                        issues.append(QualityIssue(
-                            code="INVALID_NUMERIC_PERCENTAGE", file=filename, sheet="Все КЦР", row=r,
-                            col=openpyxl.utils.get_column_letter(c_pct), raw_value=str(raw_pct),
-                            description=f"Некорректное значение процента: {err_pct}", action="requires_review"
-                        ))
-
-                    slices.append(SliceRecord(
-                        source_client_id=cid, period_start=p_start, period_end=p_end, as_of_date=as_of,
-                        total=tot, unsent=uns, raw_percentage=pct, provenance=prov, rejection_reason=rejection
-                    ))
+                    rec = parse_slice_cell_triplet(
+                        ws, r, c_tot, c_uns, c_pct, cid, p_start, p_end, as_of, filename, "Все КЦР", issues
+                    )
+                    if rec is not None:
+                        slices.append(rec)
 
             return clients, slices, issues
         finally:
@@ -394,8 +435,6 @@ class PeriodicSliceParser:
                     5: ["не отправлено"]
                 }, filename, sname)
 
-                seen_in_sheet: Set[str] = set()
-
                 for r in range(h_row + 1, ws.max_row + 1):
                     raw_id = ws.cell(r, 1).value
                     if raw_id is None or str(raw_id).strip() == "":
@@ -408,49 +447,20 @@ class PeriodicSliceParser:
                         continue
 
                     cid = str(raw_id).strip()
-                    rejection = None
-
-                    if cid in seen_in_sheet:
-                        issues.append(QualityIssue(
-                            code="DUPLICATE_CLIENT_ID", file=filename, sheet=sname, row=r, col="A",
-                            raw_value=cid, description=f"Дублирующийся идентификатор на листе: {cid}", action="requires_review"
-                        ))
-                        rejection = "DUPLICATE_CLIENT_ID"
-                    else:
-                        seen_in_sheet.add(cid)
+                    base_rejection = None
 
                     if cid not in known_clients:
                         issues.append(QualityIssue(
                             code="UNKNOWN_CLIENT_ID", file=filename, sheet=sname, row=r, col="A",
                             raw_value=cid, description=f"Клиент {cid} отсутствует в основной базе", action="blocked"
                         ))
-                        rejection = "UNKNOWN_CLIENT_ID"
+                        base_rejection = "UNKNOWN_CLIENT_ID"
 
-                    raw_tot = ws.cell(r, 4).value
-                    raw_uns = ws.cell(r, 5).value
-
-                    tot, err_tot = parse_strict_int(raw_tot)
-                    uns, err_uns = parse_strict_int(raw_uns)
-
-                    if err_tot:
-                        issues.append(QualityIssue(
-                            code="INVALID_NUMERIC_TOTAL", file=filename, sheet=sname, row=r, col="D",
-                            raw_value=str(raw_tot), description=err_tot, action="requires_review"
-                        ))
-                        rejection = rejection or err_tot
-                    if err_uns:
-                        issues.append(QualityIssue(
-                            code="INVALID_NUMERIC_UNSENT", file=filename, sheet=sname, row=r, col="E",
-                            raw_value=str(raw_uns), description=err_uns, action="requires_review"
-                        ))
-                        rejection = rejection or err_uns
-
-                    slices.append(SliceRecord(
-                        source_client_id=cid, period_start=p_start, period_end=p_end, as_of_date="2026-10-20",
-                        total=tot, unsent=uns, raw_percentage=None,
-                        provenance=Provenance(source_file=filename, source_sheet=sname, source_row=r, source_column="D,E"),
-                        rejection_reason=rejection
-                    ))
+                    rec = parse_slice_cell_triplet(
+                        ws, r, 4, 5, None, cid, p_start, p_end, "2026-10-20", filename, sname, issues, base_rejection=base_rejection
+                    )
+                    if rec is not None:
+                        slices.append(rec)
 
             return slices, issues
         finally:
@@ -458,9 +468,25 @@ class PeriodicSliceParser:
 
 
 class HistoricalFilesParser:
+    # Столбцы исторических статусов K–Q (11–17) и AO–AP (41–42)
+    STATUS_COLUMNS_SPEC = [
+        (11, "26.05.26", "2026-05-26"),
+        (12, "27.03.26", "2026-03-27"),
+        (13, "13.03.26", "2026-03-13"),
+        (14, "02.03.26", "2026-03-02"),
+        (15, "16.01.26", "2026-01-16"),
+        (16, "29.12.25", "2025-12-29"),
+        (17, "5.12.25", "2025-12-05"),
+        (41, "20.10.25", "2025-10-20"),
+        (42, "05.11.25", "2025-11-05"),
+    ]
+
     @classmethod
     def parse_debts_2025(
-        cls, filepath: str, known_clients: Optional[Set[str]] = None
+        cls,
+        filepath: str,
+        known_clients: Optional[Set[str]] = None,
+        clients_dict: Optional[Dict[str, ClientRecord]] = None
     ) -> Tuple[List[SliceRecord], List[HistoryRecord], List[QualityIssue]]:
         filename = os.path.basename(filepath)
         wb = openpyxl.load_workbook(filepath, data_only=True)
@@ -470,7 +496,7 @@ class HistoricalFilesParser:
             ws = wb["1-3 кв 25"]
             h_row = detect_header_row(ws)
 
-            verify_header_tokens(ws, h_row, {
+            expected_headers: Dict[int, List[str]] = {
                 1: ["идентификатор"],
                 10: ["претензии"],
                 19: ["документов всего", "2025"],
@@ -483,7 +509,11 @@ class HistoricalFilesParser:
                 47: ["статус звонка"],
                 53: ["повторному звонку"],
                 54: ["статус звонка в январе"],
-            }, filename, "1-3 кв 25")
+            }
+            for col_idx, date_tok, _ in cls.STATUS_COLUMNS_SPEC:
+                expected_headers[col_idx] = ["статус", date_tok]
+
+            verify_header_tokens(ws, h_row, expected_headers, filename, "1-3 кв 25")
 
             slices: List[SliceRecord] = []
             history: List[HistoryRecord] = []
@@ -537,57 +567,48 @@ class HistoricalFilesParser:
                         code="UNKNOWN_CLIENT_ID", file=filename, sheet="1-3 кв 25", row=r, col="A",
                         raw_value=cid, description=f"Клиент {cid} отсутствует в основной базе", action="blocked"
                     ))
+                elif clients_dict is not None and cid in clients_dict:
+                    # Обогащаем карточку клиента доступными полями (Время от Екб, ФИО админа) без какого-либо обезличивания
+                    tz_val = clean_optional_str(ws.cell(r, 5).value)
+                    adm_val = clean_optional_str(ws.cell(r, 6).value)
+                    if tz_val and not clients_dict[cid].time_zone_offset:
+                        clients_dict[cid].time_zone_offset = tz_val
+                    if adm_val and not clients_dict[cid].admin_name:
+                        clients_dict[cid].admin_name = adm_val
 
-                # 1. Срезы
+                # 1. Числовые срезы
                 for c_tot, c_uns, c_pct, as_of, is_ambig in hist_slice_specs:
-                    raw_tot = ws.cell(r, c_tot).value
-                    raw_uns = ws.cell(r, c_uns).value
-                    raw_pct = ws.cell(r, c_pct).value if c_pct else None
-
-                    if raw_tot is None and raw_uns is None:
-                        continue
-
-                    tot, err_tot = parse_strict_int(raw_tot)
-                    uns, err_uns = parse_strict_int(raw_uns)
-                    pct, err_pct = parse_strict_float(raw_pct) if c_pct else (None, None)
-
-                    col_name = f"{openpyxl.utils.get_column_letter(c_tot)},{openpyxl.utils.get_column_letter(c_uns)}"
-                    prov = Provenance(source_file=filename, source_sheet="1-3 кв 25", source_row=r, source_column=col_name)
-
-                    rejection = "UNKNOWN_CLIENT_ID" if is_unknown else None
-                    if is_ambig:
-                        rejection = rejection or "AMBIGUOUS_AS_OF_DATE:2025-01-16_vs_2026-01-16"
-                    if err_tot:
-                        issues.append(QualityIssue(
-                            code="INVALID_NUMERIC_TOTAL", file=filename, sheet="1-3 кв 25", row=r,
-                            col=openpyxl.utils.get_column_letter(c_tot), raw_value=str(raw_tot),
-                            description=f"Некорректное значение total: {err_tot}", action="requires_review"
-                        ))
-                        rejection = rejection or err_tot
-                    if err_uns:
-                        issues.append(QualityIssue(
-                            code="INVALID_NUMERIC_UNSENT", file=filename, sheet="1-3 кв 25", row=r,
-                            col=openpyxl.utils.get_column_letter(c_uns), raw_value=str(raw_uns),
-                            description=f"Некорректное значение unsent: {err_uns}", action="requires_review"
-                        ))
-                        rejection = rejection or err_uns
-                    if err_pct:
-                        issues.append(QualityIssue(
-                            code="INVALID_NUMERIC_PERCENTAGE", file=filename, sheet="1-3 кв 25", row=r,
-                            col=openpyxl.utils.get_column_letter(c_pct), raw_value=str(raw_pct),
-                            description=f"Некорректное значение процента: {err_pct}", action="requires_review"
-                        ))
-
-                    slices.append(SliceRecord(
-                        source_client_id=cid, period_start="2025-01-01", period_end="2025-12-31", as_of_date=as_of,
-                        total=tot, unsent=uns, raw_percentage=pct, provenance=prov, rejection_reason=rejection
-                    ))
+                    base_rej = "UNKNOWN_CLIENT_ID" if is_unknown else (
+                        "AMBIGUOUS_AS_OF_DATE:2025-01-16_vs_2026-01-16" if is_ambig else None
+                    )
+                    rec = parse_slice_cell_triplet(
+                        ws, r, c_tot, c_uns, c_pct, cid, "2025-01-01", "2025-12-31", as_of,
+                        filename, "1-3 кв 25", issues, base_rejection=base_rej
+                    )
+                    if rec is not None:
+                        slices.append(rec)
 
                 if is_unknown:
                     continue
 
-                # 2. Комментарий для претензии (столбец J / 10)
-                claim_comm = sanitize_contact_text(clean_optional_str(ws.cell(r, 10).value))
+                # 2. Исторические статусы K–Q (11–17) и AO–AP (41–42) — сохраняются дословно без маскирования
+                for col_idx, _, iso_dt in cls.STATUS_COLUMNS_SPEC:
+                    stat_val = clean_optional_str(ws.cell(r, col_idx).value)
+                    if stat_val:
+                        col_letter = openpyxl.utils.get_column_letter(col_idx)
+                        history.append(HistoryRecord(
+                            source_client_id=cid,
+                            event_type="historical_status",
+                            occurred_at=iso_dt,
+                            text=None,
+                            raw_status=stat_val,
+                            next_contact_date=None,
+                            raw_deadline=None,
+                            provenance=Provenance(source_file=filename, source_sheet="1-3 кв 25", source_row=r, source_column=col_letter)
+                        ))
+
+                # 3. Комментарий для претензии (столбец J / 10) — дословно
+                claim_comm = clean_optional_str(ws.cell(r, 10).value)
                 if claim_comm:
                     history.append(HistoryRecord(
                         source_client_id=cid, event_type="claim_comment", occurred_at=None,
@@ -595,8 +616,8 @@ class HistoricalFilesParser:
                         provenance=Provenance(source_file=filename, source_sheet="1-3 кв 25", source_row=r, source_column="J")
                     ))
 
-                # 3. Первое касание (AT-AX: 46-50)
-                comm1 = sanitize_contact_text(clean_optional_str(ws.cell(r, 46).value))
+                # 4. Первое касание (AT-AX: 46-50) — все телефоны, email и ФИО сохраняются в первозданном виде
+                comm1 = clean_optional_str(ws.cell(r, 46).value)
                 stat1 = clean_optional_str(ws.cell(r, 47).value)
                 raw_recal1 = clean_optional_str(ws.cell(r, 48).value)
                 recal1 = parse_iso_date(ws.cell(r, 48).value)
@@ -618,8 +639,8 @@ class HistoricalFilesParser:
                         raw_next_contact=raw_recal1, raw_send_deadline=dl_send1, raw_client_date=dl_client1
                     ))
 
-                # 4. Повторный контакт в январе (BA-BE: 53-57)
-                comm2 = sanitize_contact_text(clean_optional_str(ws.cell(r, 53).value))
+                # 5. Повторный контакт в январе (BA-BE: 53-57) — дословно
+                comm2 = clean_optional_str(ws.cell(r, 53).value)
                 stat2 = clean_optional_str(ws.cell(r, 54).value)
                 raw_recal2 = clean_optional_str(ws.cell(r, 55).value)
                 recal2 = parse_iso_date(ws.cell(r, 55).value)
@@ -641,7 +662,7 @@ class HistoricalFilesParser:
                         raw_next_contact=raw_recal2, raw_send_deadline=dl_send2, raw_client_date=dl_client2
                     ))
 
-                # 5. Инциденты, инфо по документам и запрос эксперта (BF-BH: 58-60)
+                # 6. Инциденты, инфо по документам и запрос эксперта (BF-BH: 58-60) — дословно
                 doc_info = clean_optional_str(ws.cell(r, 58).value)
                 incident_no = clean_optional_str(ws.cell(r, 59).value)
                 expert_req = clean_optional_str(ws.cell(r, 60).value)
@@ -665,7 +686,10 @@ class HistoricalFilesParser:
 
     @classmethod
     def parse_q1_2026(
-        cls, filepath: str, known_clients: Optional[Set[str]] = None
+        cls,
+        filepath: str,
+        known_clients: Optional[Set[str]] = None,
+        clients_dict: Optional[Dict[str, ClientRecord]] = None
     ) -> Tuple[List[SliceRecord], List[HistoryRecord], List[QualityIssue]]:
         filename = os.path.basename(filepath)
         wb = openpyxl.load_workbook(filepath, data_only=True)
@@ -678,13 +702,17 @@ class HistoricalFilesParser:
             verify_header_tokens(ws, h_row, {
                 1: ["идентификатор"],
                 22: ["всего", "весь 2025"],
-                23: ["долг", "21.05.26"],
+                23: ["долг", "весь 2025", "21.05.26"],
+                24: ["%", "весь 2025", "21.05.26"],
                 25: ["всего", "2-4"],
-                26: ["долг", "21.05.26"],
+                26: ["долг", "2-4", "21.05.26"],
+                27: ["%", "2-4", "21.05.26"],
                 28: ["всего", "1 кв 2026"],
-                29: ["долг", "21.05.26"],
+                29: ["долг", "1 кв 2026", "21.05.26"],
+                30: ["%", "1 кв 2026", "21.05.26"],
                 31: ["всего", "2 кв 2025-1 кв 2026"],
-                32: ["долг", "21.05.26"],
+                32: ["долг", "2 кв 2025-1 кв 2026", "21.05.26"],
+                33: ["%", "2 кв 2025-1 кв 2026", "21.05.26"],
                 35: ["комментарии оовс"],
                 36: ["статус звонка"],
             }, filename, "Все КЦР")
@@ -718,53 +746,28 @@ class HistoricalFilesParser:
                         code="UNKNOWN_CLIENT_ID", file=filename, sheet="Все КЦР", row=r, col="A",
                         raw_value=cid, description=f"Клиент {cid} отсутствует в основной базе", action="blocked"
                     ))
+                elif clients_dict is not None and cid in clients_dict:
+                    # Обогащаем карточку клиента часовым поясом (столбец J / 10: 'Время от Екб') и ФИО админа (K / 11)
+                    tz_val = clean_optional_str(ws.cell(r, 10).value)
+                    adm_val = clean_optional_str(ws.cell(r, 11).value)
+                    if tz_val and not clients_dict[cid].time_zone_offset:
+                        clients_dict[cid].time_zone_offset = tz_val
+                    if adm_val and not clients_dict[cid].admin_name:
+                        clients_dict[cid].admin_name = adm_val
 
                 for c_tot, c_uns, c_pct, p_start, p_end in q1_slice_specs:
-                    raw_tot = ws.cell(r, c_tot).value
-                    raw_uns = ws.cell(r, c_uns).value
-                    raw_pct = ws.cell(r, c_pct).value
-
-                    if raw_tot is None and raw_uns is None:
-                        continue
-
-                    tot, err_tot = parse_strict_int(raw_tot)
-                    uns, err_uns = parse_strict_int(raw_uns)
-                    pct, err_pct = parse_strict_float(raw_pct)
-
-                    col_name = f"{openpyxl.utils.get_column_letter(c_tot)},{openpyxl.utils.get_column_letter(c_uns)}"
-                    prov = Provenance(source_file=filename, source_sheet="Все КЦР", source_row=r, source_column=col_name)
-
-                    rejection = "UNKNOWN_CLIENT_ID" if is_unknown else None
-                    if err_tot:
-                        issues.append(QualityIssue(
-                            code="INVALID_NUMERIC_TOTAL", file=filename, sheet="Все КЦР", row=r,
-                            col=openpyxl.utils.get_column_letter(c_tot), raw_value=str(raw_tot),
-                            description=f"Некорректное значение total: {err_tot}", action="requires_review"
-                        ))
-                        rejection = rejection or err_tot
-                    if err_uns:
-                        issues.append(QualityIssue(
-                            code="INVALID_NUMERIC_UNSENT", file=filename, sheet="Все КЦР", row=r,
-                            col=openpyxl.utils.get_column_letter(c_uns), raw_value=str(raw_uns),
-                            description=f"Некорректное значение unsent: {err_uns}", action="requires_review"
-                        ))
-                        rejection = rejection or err_uns
-                    if err_pct:
-                        issues.append(QualityIssue(
-                            code="INVALID_NUMERIC_PERCENTAGE", file=filename, sheet="Все КЦР", row=r,
-                            col=openpyxl.utils.get_column_letter(c_pct), raw_value=str(raw_pct),
-                            description=f"Некорректное значение процента: {err_pct}", action="requires_review"
-                        ))
-
-                    slices.append(SliceRecord(
-                        source_client_id=cid, period_start=p_start, period_end=p_end, as_of_date="2026-05-21",
-                        total=tot, unsent=uns, raw_percentage=pct, provenance=prov, rejection_reason=rejection
-                    ))
+                    base_rej = "UNKNOWN_CLIENT_ID" if is_unknown else None
+                    rec = parse_slice_cell_triplet(
+                        ws, r, c_tot, c_uns, c_pct, cid, p_start, p_end, "2026-05-21",
+                        filename, "Все КЦР", issues, base_rejection=base_rej
+                    )
+                    if rec is not None:
+                        slices.append(rec)
 
                 if is_unknown:
                     continue
 
-                comm = sanitize_contact_text(clean_optional_str(ws.cell(r, 35).value))
+                comm = clean_optional_str(ws.cell(r, 35).value)
                 stat = clean_optional_str(ws.cell(r, 36).value)
                 raw_recal = clean_optional_str(ws.cell(r, 37).value)
                 recal = parse_iso_date(ws.cell(r, 37).value)
@@ -831,6 +834,14 @@ class QualityAuditor:
                 rejected.append(s)
                 continue
 
+            if s.raw_percentage is not None and not math.isfinite(s.raw_percentage):
+                issues.append(QualityIssue(
+                    code="INVALID_NUMERIC_PERCENTAGE", file=p.source_file, sheet=p.source_sheet, row=p.source_row,
+                    col=p.source_column or "percentage", raw_value=str(s.raw_percentage),
+                    description="Неконечное значение процента (NaN или Infinity)", action="requires_review"
+                ))
+                s.rejection_reason = s.rejection_reason or f"NON_FINITE_FLOAT:{s.raw_percentage}"
+
             if s.total is not None and s.total < 0:
                 issues.append(QualityIssue(
                     code="NEGATIVE_TOTAL", file=p.source_file, sheet=p.source_sheet, row=p.source_row,
@@ -865,7 +876,7 @@ class QualityAuditor:
                 ))
                 s.rejection_reason = "UNSENT_EXCEEDS_TOTAL"
 
-            if s.raw_percentage is not None and s.total and s.unsent is not None and s.total > 0:
+            if s.raw_percentage is not None and math.isfinite(s.raw_percentage) and s.total and s.unsent is not None and s.total > 0:
                 calc_pct = s.unsent / s.total
                 if abs(s.raw_percentage - calc_pct) > 0.02:
                     issues.append(QualityIssue(
@@ -880,7 +891,7 @@ class QualityAuditor:
                 rejected.append(s)
                 continue
 
-            # 2. Обработка совпадений и конфликтов среди пригодных записей
+            # 2. Обработка совпадений и конфликтов среди пригодных записей (включая повторы внутри одного листа!)
             key = (s.source_client_id, s.period_start, s.period_end, s.as_of_date)
             if key in conflicted_keys:
                 issues.append(QualityIssue(
@@ -948,8 +959,8 @@ def parse_all_kcr(base_dir: str = ".") -> Tuple[List[Dict[str, Any]], List[Dict[
     known_cids = set(clients_dict.keys())
 
     s2, issues2 = PeriodicSliceParser.parse(f2, known_cids, require_all_sheets=True)
-    s3, h3, issues3 = HistoricalFilesParser.parse_debts_2025(f3, known_clients=known_cids)
-    s4, h4, issues4 = HistoricalFilesParser.parse_q1_2026(f4, known_clients=known_cids)
+    s3, h3, issues3 = HistoricalFilesParser.parse_debts_2025(f3, known_clients=known_cids, clients_dict=clients_dict)
+    s4, h4, issues4 = HistoricalFilesParser.parse_q1_2026(f4, known_clients=known_cids, clients_dict=clients_dict)
 
     all_raw_slices = s1 + s2 + s3 + s4
     valid_slices, rejected_slices, audit_issues = QualityAuditor.audit_and_filter_slices(all_raw_slices)
@@ -971,12 +982,6 @@ def export_artifacts(clients, valid_slices, rejected_slices, history, issues, ou
     staging_dir = os.path.join(output_dir, "_staging")
     backup_dir = os.path.join(output_dir, "_backup")
 
-    if os.path.exists(staging_dir):
-        shutil.rmtree(staging_dir)
-    if os.path.exists(backup_dir):
-        shutil.rmtree(backup_dir)
-    os.makedirs(staging_dir, exist_ok=True)
-
     target_files = [
         "normalized_clients.json",
         "normalized_slices.jsonl",
@@ -985,6 +990,19 @@ def export_artifacts(clients, valid_slices, rejected_slices, history, issues, ou
         "quality_report.json",
         "quality_report.csv"
     ]
+
+    # Если с предыдущего прерванного запуска осталась непустая папка _backup,
+    # НЕ удаляем её до восстановления недостающих целевых файлов!
+    if os.path.exists(backup_dir):
+        for fname in target_files:
+            bck_file = os.path.join(backup_dir, fname)
+            dst_file = os.path.join(output_dir, fname)
+            if os.path.exists(bck_file) and not os.path.exists(dst_file):
+                os.replace(bck_file, dst_file)
+
+    if os.path.exists(staging_dir):
+        shutil.rmtree(staging_dir)
+    os.makedirs(staging_dir, exist_ok=True)
 
     with open(os.path.join(staging_dir, "normalized_clients.json"), "w", encoding="utf-8") as f:
         json.dump(clients, f, ensure_ascii=False, indent=2)
@@ -1010,10 +1028,12 @@ def export_artifacts(clients, valid_slices, rejected_slices, history, issues, ou
         for i in issues:
             writer.writerow(i)
 
-    # Транзакционная замена с автоматическим откатом из _backup при любом сбое
     os.makedirs(backup_dir, exist_ok=True)
     moved_to_backup: List[str] = []
     published: List[str] = []
+    commit_succeeded = False
+    rollback_succeeded = False
+
     try:
         for fname in target_files:
             dst = os.path.join(output_dir, fname)
@@ -1026,8 +1046,9 @@ def export_artifacts(clients, valid_slices, rejected_slices, history, issues, ou
             dst = os.path.join(output_dir, fname)
             os.replace(src, dst)
             published.append(fname)
+
+        commit_succeeded = True
     except Exception:
-        # Откат опубликованных файлов и возврат предыдущей версии из _backup
         for fname in published:
             dst = os.path.join(output_dir, fname)
             if os.path.exists(dst):
@@ -1037,12 +1058,13 @@ def export_artifacts(clients, valid_slices, rejected_slices, history, issues, ou
             dst = os.path.join(output_dir, fname)
             if os.path.exists(bck):
                 os.replace(bck, dst)
+        rollback_succeeded = True
         raise
     finally:
-        if os.path.exists(backup_dir):
-            shutil.rmtree(backup_dir)
         if os.path.exists(staging_dir):
             shutil.rmtree(staging_dir)
+        if (commit_succeeded or rollback_succeeded) and os.path.exists(backup_dir):
+            shutil.rmtree(backup_dir)
 
 
 def main():
@@ -1057,7 +1079,7 @@ def main():
     print(f"  Клиентов в базе: {len(c)}")
     print(f"  Валидных срезов (допущены): {len(vs)}")
     print(f"  Отклонённых срезов (rejected): {len(rs)}")
-    print(f"  Исторических контактов: {len(h)}")
+    print(f"  Исторических материалов: {len(h)}")
     print(f"  Замечаний аудита качества: {len(issues)}")
 
 

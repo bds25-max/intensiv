@@ -5840,26 +5840,6 @@
     "action": "skipped"
   },
   {
-    "code": "DUPLICATE_CLIENT_ID",
-    "file": "Срез 20.10.26_Дубна.xlsx",
-    "sheet": "весь 2025 год",
-    "row": 1258,
-    "col": "A",
-    "raw_value": "ISE83063",
-    "description": "Дублирующийся идентификатор на листе: ISE83063",
-    "action": "requires_review"
-  },
-  {
-    "code": "DUPLICATE_CLIENT_ID",
-    "file": "Срез 20.10.26_Дубна.xlsx",
-    "sheet": "1 кв 2026",
-    "row": 1064,
-    "col": "A",
-    "raw_value": "ISE83063",
-    "description": "Дублирующийся идентификатор на листе: ISE83063",
-    "action": "requires_review"
-  },
-  {
     "code": "UNKNOWN_CLIENT_ID",
     "file": "Срез 20.10.26_Дубна.xlsx",
     "sheet": "3 кв 2026",
@@ -32317,6 +32297,26 @@
     "col": "AN,AS",
     "raw_value": "total=null, unsent=0",
     "description": "Указан остаток непереданных документов при отсутствующем общем количестве",
+    "action": "requires_review"
+  },
+  {
+    "code": "DUPLICATE_SLICE",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "весь 2025 год",
+    "row": 1258,
+    "col": "D,E",
+    "raw_value": "('ISE83063', '2025-01-01', '2025-12-31', '2026-10-20')",
+    "description": "Дублирующийся срез данных с идентичными значениями для ключа ('ISE83063', '2025-01-01', '2025-12-31', '2026-10-20')",
+    "action": "requires_review"
+  },
+  {
+    "code": "DUPLICATE_SLICE",
+    "file": "Срез 20.10.26_Дубна.xlsx",
+    "sheet": "1 кв 2026",
+    "row": 1064,
+    "col": "D,E",
+    "raw_value": "('ISE83063', '2026-01-01', '2026-03-31', '2026-10-20')",
+    "description": "Дублирующийся срез данных с идентичными значениями для ключа ('ISE83063', '2026-01-01', '2026-03-31', '2026-10-20')",
     "action": "requires_review"
   },
   {

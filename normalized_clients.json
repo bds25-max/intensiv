@@ -978,7 +978,7 @@
     "source_client_id": "WQC24907",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "3",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -1524,7 +1524,7 @@
     "source_client_id": "DAK67801",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "4",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -3435,7 +3435,7 @@
     "source_client_id": "QPS98546",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "3",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -3461,7 +3461,7 @@
     "source_client_id": "YWC55822",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -3721,7 +3721,7 @@
     "source_client_id": "WVG38454",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -4644,7 +4644,7 @@
     "source_client_id": "JAM19209",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -4709,7 +4709,7 @@
     "source_client_id": "NBR05698",
     "is_active": "Не действующий",
     "is_blocked": "да",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -5047,7 +5047,7 @@
     "source_client_id": "NES88004",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -5736,7 +5736,7 @@
     "source_client_id": "CFS88304",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -7114,7 +7114,7 @@
     "source_client_id": "TEE00068",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "3",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -7257,7 +7257,7 @@
     "source_client_id": "XBJ44704",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -7361,7 +7361,7 @@
     "source_client_id": "ITE28142",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "4",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -8297,7 +8297,7 @@
     "source_client_id": "CYQ90457",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -9376,7 +9376,7 @@
     "source_client_id": "KFI72886",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -9831,7 +9831,7 @@
     "source_client_id": "HIL42790",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "3",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -10130,7 +10130,7 @@
     "source_client_id": "QVE18358",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -11040,7 +11040,7 @@
     "source_client_id": "NCW38625",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -11443,7 +11443,7 @@
     "source_client_id": "NXQ96406",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "5",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -12691,7 +12691,7 @@
     "source_client_id": "OCU59605",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "0",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -13198,7 +13198,7 @@
     "source_client_id": "ZPZ48248",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-3",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -15499,7 +15499,7 @@
     "source_client_id": "RGN99694",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "5",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -18645,7 +18645,7 @@
     "source_client_id": "CFP41000",
     "is_active": "Не действующий",
     "is_blocked": "да",
-    "time_zone_offset": null,
+    "time_zone_offset": "0",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -20387,7 +20387,7 @@
     "source_client_id": "EMQ76314",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -22441,7 +22441,7 @@
     "source_client_id": "RXG37128",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -22532,7 +22532,7 @@
     "source_client_id": "HBK67692",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -24014,7 +24014,7 @@
     "source_client_id": "KKF11929",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -24417,7 +24417,7 @@
     "source_client_id": "HZY13176",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -24950,7 +24950,7 @@
     "source_client_id": "WLA03909",
     "is_active": "Не действующий",
     "is_blocked": "да",
-    "time_zone_offset": null,
+    "time_zone_offset": "6",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -25015,7 +25015,7 @@
     "source_client_id": "EJV10578",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -25418,7 +25418,7 @@
     "source_client_id": "WRN56860",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "6",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -26653,7 +26653,7 @@
     "source_client_id": "XWB60759",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -28720,7 +28720,7 @@
     "source_client_id": "QAU94752",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-1",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -28876,7 +28876,7 @@
     "source_client_id": "CEY29793",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -29305,7 +29305,7 @@
     "source_client_id": "SIT02729",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "6",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -31164,7 +31164,7 @@
     "source_client_id": "CZQ48318",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-1",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -31502,7 +31502,7 @@
     "source_client_id": "SIB81186",
     "is_active": "Не действующий",
     "is_blocked": "да",
-    "time_zone_offset": null,
+    "time_zone_offset": "0",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -31827,7 +31827,7 @@
     "source_client_id": "OCH85866",
     "is_active": "Не действующий",
     "is_blocked": "да",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -31931,7 +31931,7 @@
     "source_client_id": "AEB83954",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "1",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -32230,7 +32230,7 @@
     "source_client_id": "TUB12913",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -33959,7 +33959,7 @@
     "source_client_id": "RKY93001",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -34219,7 +34219,7 @@
     "source_client_id": "GEJ76348",
     "is_active": "Не действующий",
     "is_blocked": "да",
-    "time_zone_offset": null,
+    "time_zone_offset": "5",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -34297,7 +34297,7 @@
     "source_client_id": "PFR32744",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "0",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -35038,7 +35038,7 @@
     "source_client_id": "EHA33371",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "3",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -35116,7 +35116,7 @@
     "source_client_id": "ECV96426",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -35220,7 +35220,7 @@
     "source_client_id": "KSU47028",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "4",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -35298,7 +35298,7 @@
     "source_client_id": "XHJ23395",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-1",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -35896,7 +35896,7 @@
     "source_client_id": "LNJ68119",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "0",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -35961,7 +35961,7 @@
     "source_client_id": "RSD67413",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "4",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -36429,7 +36429,7 @@
     "source_client_id": "BEW69372",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "0",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -36754,7 +36754,7 @@
     "source_client_id": "QKN56398",
     "is_active": "Не действующий",
     "is_blocked": "да",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -36975,7 +36975,7 @@
     "source_client_id": "RNK30293",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-3",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -37326,7 +37326,7 @@
     "source_client_id": "TDO32254",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "4",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -37729,7 +37729,7 @@
     "source_client_id": "HLL03771",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "0",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -37898,7 +37898,7 @@
     "source_client_id": "WMT87559",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "0",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -37937,7 +37937,7 @@
     "source_client_id": "ERL48435",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "0",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -40472,7 +40472,7 @@
     "source_client_id": "FXD08453",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "6",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -41005,7 +41005,7 @@
     "source_client_id": "UGH25834",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "5",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -41590,7 +41590,7 @@
     "source_client_id": "KXC34849",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -41616,7 +41616,7 @@
     "source_client_id": "NLE04861",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -42435,7 +42435,7 @@
     "source_client_id": "LCK79453",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "4",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -44762,7 +44762,7 @@
     "source_client_id": "XWO71838",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -44814,7 +44814,7 @@
     "source_client_id": "JMK01195",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -46049,7 +46049,7 @@
     "source_client_id": "EXQ88939",
     "is_active": "Дейсвующий",
     "is_blocked": "да",
-    "time_zone_offset": null,
+    "time_zone_offset": "4",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -46218,7 +46218,7 @@
     "source_client_id": "KVU29907",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -47024,7 +47024,7 @@
     "source_client_id": "EQO15435",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -47375,7 +47375,7 @@
     "source_client_id": "XPI61237",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -49572,7 +49572,7 @@
     "source_client_id": "OAF44600",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "0",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -49767,7 +49767,7 @@
     "source_client_id": "YCR65260",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -50118,7 +50118,7 @@
     "source_client_id": "JYJ72788",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -50170,7 +50170,7 @@
     "source_client_id": "QLT20048",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "0",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -50391,7 +50391,7 @@
     "source_client_id": "TFW54869",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -50560,7 +50560,7 @@
     "source_client_id": "ZOG17581",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "0",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -51327,7 +51327,7 @@
     "source_client_id": "YXO98645",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -51470,7 +51470,7 @@
     "source_client_id": "OSU76532",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -52406,7 +52406,7 @@
     "source_client_id": "RBJ36128",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -52978,7 +52978,7 @@
     "source_client_id": "AYX26035",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -53511,7 +53511,7 @@
     "source_client_id": "JDD79065",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -55682,7 +55682,7 @@
     "source_client_id": "HUK51239",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "3",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -56072,7 +56072,7 @@
     "source_client_id": "FQW96248",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -58607,7 +58607,7 @@
     "source_client_id": "LDM52577",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -59179,7 +59179,7 @@
     "source_client_id": "GEQ34401",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "0",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -59777,7 +59777,7 @@
     "source_client_id": "EQE81625",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -60076,7 +60076,7 @@
     "source_client_id": "RWY40976",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "0",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -60726,7 +60726,7 @@
     "source_client_id": "USM70762",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "0",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -60869,7 +60869,7 @@
     "source_client_id": "EVD63001",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -62338,7 +62338,7 @@
     "source_client_id": "WRW22372",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -63742,7 +63742,7 @@
     "source_client_id": "UKT89337",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -64106,7 +64106,7 @@
     "source_client_id": "VSL82082",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "0",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -64574,7 +64574,7 @@
     "source_client_id": "OCG40088",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -64639,7 +64639,7 @@
     "source_client_id": "SDC88904",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -64756,7 +64756,7 @@
     "source_client_id": "BGT02513",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -64782,7 +64782,7 @@
     "source_client_id": "BXV07296",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -64821,7 +64821,7 @@
     "source_client_id": "VAC00050",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -64847,7 +64847,7 @@
     "source_client_id": "YPR61248",
     "is_active": "Не действующий",
     "is_blocked": "да",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -64899,7 +64899,7 @@
     "source_client_id": "WDF90715",
     "is_active": "Не действующий",
     "is_blocked": "да",
-    "time_zone_offset": null,
+    "time_zone_offset": "-1",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -65016,7 +65016,7 @@
     "source_client_id": "XXD78058",
     "is_active": "Дейсвующий",
     "is_blocked": "да",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -65042,7 +65042,7 @@
     "source_client_id": "PVT85113",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -65094,7 +65094,7 @@
     "source_client_id": "WVN73424",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "0",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -65185,7 +65185,7 @@
     "source_client_id": "SYE80811",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -65263,7 +65263,7 @@
     "source_client_id": "ZJQ19200",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "0",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -65562,7 +65562,7 @@
     "source_client_id": "KYU14330",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -65575,7 +65575,7 @@
     "source_client_id": "QMO59499",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "5",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -65666,7 +65666,7 @@
     "source_client_id": "LRW27900",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -66225,7 +66225,7 @@
     "source_client_id": "YER69797",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -66511,7 +66511,7 @@
     "source_client_id": "KXU77243",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -66576,7 +66576,7 @@
     "source_client_id": "EEM34772",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -66875,7 +66875,7 @@
     "source_client_id": "JKT40281",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -66953,7 +66953,7 @@
     "source_client_id": "YAK83388",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -67343,7 +67343,7 @@
     "source_client_id": "IZW08893",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -67369,7 +67369,7 @@
     "source_client_id": "ZPY21502",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -67382,7 +67382,7 @@
     "source_client_id": "KLH70502",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -67460,7 +67460,7 @@
     "source_client_id": "DPN06208",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "0",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -67616,7 +67616,7 @@
     "source_client_id": "EYC07193",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -67798,7 +67798,7 @@
     "source_client_id": "ZWR71715",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "-2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
@@ -67980,7 +67980,7 @@
     "source_client_id": "XZI90932",
     "is_active": "Дейсвующий",
     "is_blocked": "нет",
-    "time_zone_offset": null,
+    "time_zone_offset": "2",
     "admin_name": null,
     "provenance": {
       "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
