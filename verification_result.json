@@ -1,0 +1,50 @@
+{
+  "status": "passed",
+  "source_sha256": {
+    "База I кв 2026 Дубна.xlsx": "f4a2e85ca0f77cd164b7a77374a9942c6307b915c4b0142f74cc5cad6abf5431",
+    "База должники III кв 2025 Дубна.xlsx": "b831692b7a413d28c309d898437b6e48ea8c9bb23e7606c343a028be6a75a81b",
+    "КЦР_последняя выгрузка_Дубна.xlsx": "e48537821f633ab5b1d3c212d4056af88e4911a1641cbfbf173202717b6adef7",
+    "Контур КЦР — порядок взаимодействия по четырём задачам.docx": "abd15cee94c9067fcc6962d985d06ae89f9385af1852b338e4233ad936f2c5e1",
+    "Контур КЦР — рекомендуемый стек четырёх задач.docx": "4c6059c35d0d180f52a90cba9d0f181165a137a98c141d7024194bf772e07812",
+    "Срез 20.10.26_Дубна.xlsx": "4b3a12a51d560a858b062ec59eb6ccc046591411c91e06224ae0e23ee39980b2",
+    "ТЗ 1 — Разбор Excel и единый формат.docx": "e81632f8e2cb472d3c7db8934beba3d180bd060047c584f64113644da7677701",
+    "ТЗ 2 — Модель данных и история.docx": "a9086cfa4c5d513bf9ad8a62e0864937bd7428509443f9593ac16847fff1cbbd",
+    "ТЗ 3 — Динамика и правила отбора.docx": "e92533c58419f66f7a0ad789cc0b4e3c854fc8e7abbdc9364b4a9888f27126f1",
+    "ТЗ 4 — Коммуникации и рабочий процесс.docx": "34ebfe1593eb4b62aa0ee6879b8c3e21832b2cef33a3e14227b3a8274c01c456"
+  },
+  "sheets": 7,
+  "columns": 188,
+  "clients": 5874,
+  "valid_slices": 87933,
+  "rejected_slices": 3877,
+  "history_records": 5899,
+  "quality_issues": 3683,
+  "history_fields_compared": 20471,
+  "all_history_records_compared": true,
+  "repeat_export_byte_identical": true,
+  "sources_unchanged": true,
+  "history_by_type": {
+    "historical_status": 5150,
+    "claim_comment": 52,
+    "first_contact": 295,
+    "second_contact": 280,
+    "incident_or_expert_request": 7,
+    "operator_contact": 115
+  },
+  "issues_by_code": {
+    "INVALID_NUMERIC_UNSENT": 678,
+    "MISSING_CLIENT_ID": 2,
+    "UNKNOWN_CLIENT_ID": 243,
+    "HEADER_CONTRADICTION": 1,
+    "INVALID_NUMERIC_PERCENTAGE": 95,
+    "UNSENT_WITHOUT_TOTAL": 2202,
+    "PERCENTAGE_MISMATCH": 3,
+    "UNSENT_EXCEEDS_TOTAL": 7,
+    "DUPLICATE_SLICE": 452
+  },
+  "preserved_source_cells": 11694,
+  "excluded_nonempty_cells": 4543,
+  "formula_cells": 107303,
+  "uncached_formula_cells": 0,
+  "slice_count_fields_compared": 183620
+}

@@ -1,0 +1,149 @@
+{
+  "description": "Выбрано из фактических результатов без изменения значений. Это не вымышленные клиенты.",
+  "clients": [
+    {
+      "source_client_id": "JXC41156",
+      "is_active": "Не действующий",
+      "is_blocked": "нет",
+      "time_zone_offset": null,
+      "admin_name": null,
+      "provenance": {
+        "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
+        "source_sheet": "Все КЦР",
+        "source_row": 3,
+        "source_column": null
+      },
+      "kcr_code": null,
+      "organization_name": null,
+      "service_center": null,
+      "inn": null,
+      "kpp": null,
+      "creation_date": null,
+      "admin_phone": null,
+      "admin_email": null,
+      "manager_name": null,
+      "attribute_provenance": {
+        "is_active": {
+          "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
+          "source_sheet": "Все КЦР",
+          "source_row": 3,
+          "source_column": "J"
+        },
+        "is_blocked": {
+          "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
+          "source_sheet": "Все КЦР",
+          "source_row": 3,
+          "source_column": "K"
+        }
+      }
+    },
+    {
+      "source_client_id": "JFM31276",
+      "is_active": "Не действующий",
+      "is_blocked": "нет",
+      "time_zone_offset": null,
+      "admin_name": null,
+      "provenance": {
+        "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
+        "source_sheet": "Все КЦР",
+        "source_row": 4,
+        "source_column": null
+      },
+      "kcr_code": null,
+      "organization_name": null,
+      "service_center": null,
+      "inn": null,
+      "kpp": null,
+      "creation_date": null,
+      "admin_phone": null,
+      "admin_email": null,
+      "manager_name": null,
+      "attribute_provenance": {
+        "is_active": {
+          "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
+          "source_sheet": "Все КЦР",
+          "source_row": 4,
+          "source_column": "J"
+        },
+        "is_blocked": {
+          "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
+          "source_sheet": "Все КЦР",
+          "source_row": 4,
+          "source_column": "K"
+        }
+      }
+    }
+  ],
+  "slices": [
+    {
+      "source_client_id": "SSO90976",
+      "period_start": "2025-01-01",
+      "period_end": "2025-12-31",
+      "as_of_date": "2026-09-29",
+      "total": 2,
+      "unsent": 2,
+      "raw_percentage": 1.0,
+      "provenance": {
+        "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
+        "source_sheet": "Все КЦР",
+        "source_row": 6,
+        "source_column": "O,P"
+      },
+      "rejection_reason": null
+    },
+    {
+      "source_client_id": "SSO90976",
+      "period_start": "2025-01-01",
+      "period_end": "2025-12-31",
+      "as_of_date": "2026-07-21",
+      "total": 2,
+      "unsent": 2,
+      "raw_percentage": 1.0,
+      "provenance": {
+        "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
+        "source_sheet": "Все КЦР",
+        "source_row": 6,
+        "source_column": "O,R"
+      },
+      "rejection_reason": null
+    }
+  ],
+  "history": [
+    {
+      "source_client_id": "JXC41156",
+      "event_type": "historical_status",
+      "occurred_at": "2026-05-21",
+      "text": null,
+      "raw_status": "Не нужно работать",
+      "next_contact_date": null,
+      "raw_deadline": null,
+      "provenance": {
+        "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
+        "source_sheet": "Все КЦР",
+        "source_row": 3,
+        "source_column": "G"
+      },
+      "raw_next_contact": null,
+      "raw_send_deadline": null,
+      "raw_client_date": null
+    },
+    {
+      "source_client_id": "JFM31276",
+      "event_type": "historical_status",
+      "occurred_at": "2026-05-21",
+      "text": null,
+      "raw_status": "Не нужно работать",
+      "next_contact_date": null,
+      "raw_deadline": null,
+      "provenance": {
+        "source_file": "КЦР_последняя выгрузка_Дубна.xlsx",
+        "source_sheet": "Все КЦР",
+        "source_row": 4,
+        "source_column": "G"
+      },
+      "raw_next_contact": null,
+      "raw_send_deadline": null,
+      "raw_client_date": null
+    }
+  ]
+}
