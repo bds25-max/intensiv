@@ -1,7 +1,7 @@
 """
 parser_core.py — ETL-модуль разбора Excel и нормализации в единый JSON-контракт.
-Контур КЦР. Задача 1 (Версия 8: полный прогон по четырём исходным Excel,
-повторный срез без total опирается только на принятые наблюдения).
+Контур КЦР. Задача 1 (Версия 9: проверка даты создания, раздельные код и название СЦ,
+сверка процента по опоре; рефакторинг без изменения основных правил).
 """
 
 from __future__ import annotations
@@ -12,6 +12,7 @@ import csv
 import re
 import math
 import shutil
+from pathlib import Path
 from decimal import Decimal, InvalidOperation
 from dataclasses import dataclass, asdict, field
 from datetime import datetime, date
@@ -38,9 +39,11 @@ class ClientRecord:
     kcr_code: Optional[str] = None
     organization_name: Optional[str] = None
     service_center: Optional[str] = None
+    service_center_code: Optional[str] = None
     inn: Optional[str] = None
     kpp: Optional[str] = None
     creation_date: Optional[str] = None
+    raw_creation_date: Optional[str] = None
     admin_phone: Optional[str] = None
     admin_email: Optional[str] = None
     manager_name: Optional[str] = None
@@ -88,1730 +91,9 @@ class QualityIssue:
 
 
 # Полная программная карта всех 188 колонок 4 исходных файлов (7 листов)
-COLUMN_MAPPING: Dict[str, List[Dict[str, Any]]] = {'КЦР_последняя выгрузка_Дубна.xlsx::Все КЦР': [{'col_letter': 'A',
-                                                 'col_index': 1,
-                                                 'header': None,
-                                                 'target_field': 'ClientRecord.source_client_id',
-                                                 'transform': 'str.strip(); пустые пропускаются, дубли фиксируются',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 5874},
-                                                {'col_letter': 'B',
-                                                 'col_index': 2,
-                                                 'header': 'Код КЦР',
-                                                 'target_field': 'ClientRecord.kcr_code',
-                                                 'transform': 'clean_optional_str (в обезличенной выборке пусто)',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 0},
-                                                {'col_letter': 'C',
-                                                 'col_index': 3,
-                                                 'header': 'Название',
-                                                 'target_field': 'ClientRecord.organization_name',
-                                                 'transform': 'clean_optional_str (в обезличенной выборке пусто)',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 0},
-                                                {'col_letter': 'D',
-                                                 'col_index': 4,
-                                                 'header': 'СЦ',
-                                                 'target_field': 'ClientRecord.service_center',
-                                                 'transform': 'clean_optional_str (в обезличенной выборке пусто)',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 0},
-                                                {'col_letter': 'E',
-                                                 'col_index': 5,
-                                                 'header': None,
-                                                 'target_field': None,
-                                                 'transform': 'Сохранение исходного значения и координат в '
-                                                              'source_preserved_values.jsonl при наличии значения.',
-                                                 'exclusion_reason': 'Нет непустых значений ниже заголовка в '
-                                                                     'предоставленном файле.',
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 0},
-                                                {'col_letter': 'F',
-                                                 'col_index': 6,
-                                                 'header': 'Статус на 21.07.26',
-                                                 'target_field': 'HistoryRecord(historical_status)',
-                                                 'transform': "occurred_at='2026-07-21', source_column='F' (7 записей)",
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 7},
-                                                {'col_letter': 'G',
-                                                 'col_index': 7,
-                                                 'header': 'стаус на 21.05.26',
-                                                 'target_field': 'HistoryRecord(historical_status)',
-                                                 'transform': "occurred_at='2026-05-21', source_column='G' (2 748 "
-                                                              'записей)',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 2748},
-                                                {'col_letter': 'H',
-                                                 'col_index': 8,
-                                                 'header': 'ИНН',
-                                                 'target_field': 'ClientRecord.inn',
-                                                 'transform': 'clean_optional_str (в обезличенной выборке пусто)',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 0},
-                                                {'col_letter': 'I',
-                                                 'col_index': 9,
-                                                 'header': 'КПП',
-                                                 'target_field': 'ClientRecord.kpp',
-                                                 'transform': 'clean_optional_str (в обезличенной выборке пусто)',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 0},
-                                                {'col_letter': 'J',
-                                                 'col_index': 10,
-                                                 'header': 'Действует ли КЦР',
-                                                 'target_field': 'ClientRecord.is_active',
-                                                 'transform': 'clean_optional_str (5 873 значения)',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 5873},
-                                                {'col_letter': 'K',
-                                                 'col_index': 11,
-                                                 'header': 'Блокировка в сервисе',
-                                                 'target_field': 'ClientRecord.is_blocked',
-                                                 'transform': 'clean_optional_str (5 873 значения)',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 5873},
-                                                {'col_letter': 'L',
-                                                 'col_index': 12,
-                                                 'header': 'ФИО менеджера',
-                                                 'target_field': 'ClientRecord.manager_name',
-                                                 'transform': 'clean_optional_str; сохраняется отдельно от admin_name',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 0},
-                                                {'col_letter': 'M',
-                                                 'col_index': 13,
-                                                 'header': 'ФИО менеджера из КП',
-                                                 'target_field': 'ClientRecord.manager_name',
-                                                 'transform': 'Резервное поле manager_name, если L пусто',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 0},
-                                                {'col_letter': 'N',
-                                                 'col_index': 14,
-                                                 'header': 'Статус на 21.07.26',
-                                                 'target_field': None,
-                                                 'transform': 'Сохранение исходного значения и координат в '
-                                                              'source_preserved_values.jsonl при наличии значения.',
-                                                 'exclusion_reason': 'Нет непустых значений ниже заголовка в '
-                                                                     'предоставленном файле.',
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 0},
-                                                {'col_letter': 'O',
-                                                 'col_index': 15,
-                                                 'header': 'Всего документов весь 2025',
-                                                 'target_field': 'SliceRecord.total',
-                                                 'transform': 'parse_strict_int; период 2025-01-01..2025-12-31',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3419},
-                                                {'col_letter': 'P',
-                                                 'col_index': 16,
-                                                 'header': 'Долг весь 2025 на 29.09.26',
-                                                 'target_field': 'SliceRecord.unsent',
-                                                 'transform': 'parse_strict_int; период 2025-01-01..2025-12-31, срез '
-                                                              '2026-09-29',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3419},
-                                                {'col_letter': 'Q',
-                                                 'col_index': 17,
-                                                 'header': '% Долга весь 2025 на 29.09.26',
-                                                 'target_field': 'SliceRecord.raw_percentage',
-                                                 'transform': 'parse_strict_float; сверка с unsent/total (±0.02), срез '
-                                                              '2026-09-29',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3419},
-                                                {'col_letter': 'R',
-                                                 'col_index': 18,
-                                                 'header': 'Долг весь 2025 на 21.07.26',
-                                                 'target_field': 'SliceRecord.unsent',
-                                                 'transform': 'parse_strict_int; период 2025-01-01..2025-12-31, срез '
-                                                              '2026-07-21',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3419},
-                                                {'col_letter': 'S',
-                                                 'col_index': 19,
-                                                 'header': '% Долга весь 2025 на 21.07.26',
-                                                 'target_field': 'SliceRecord.raw_percentage',
-                                                 'transform': 'parse_strict_float; сверка с unsent/total (±0.02), срез '
-                                                              '2026-07-21',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3419},
-                                                {'col_letter': 'T',
-                                                 'col_index': 20,
-                                                 'header': 'Долг весь 2025 на 07.07.26',
-                                                 'target_field': 'SliceRecord.unsent',
-                                                 'transform': 'parse_strict_int; период 2025-01-01..2025-12-31, срез '
-                                                              '2026-07-07',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3419},
-                                                {'col_letter': 'U',
-                                                 'col_index': 21,
-                                                 'header': '% Долга весь 2025 на 07.07.26',
-                                                 'target_field': 'SliceRecord.raw_percentage',
-                                                 'transform': 'parse_strict_float; сверка с unsent/total (±0.02), срез '
-                                                              '2026-07-07',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3418},
-                                                {'col_letter': 'V',
-                                                 'col_index': 22,
-                                                 'header': 'Долг весь 2025 на 21.05.26',
-                                                 'target_field': 'SliceRecord.unsent',
-                                                 'transform': 'parse_strict_int; период 2025-01-01..2025-12-31, срез '
-                                                              '2026-05-21',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3418},
-                                                {'col_letter': 'W',
-                                                 'col_index': 23,
-                                                 'header': '% Долга весь 2025 на 21.05.26',
-                                                 'target_field': 'SliceRecord.raw_percentage',
-                                                 'transform': 'parse_strict_float; сверка с unsent/total (±0.02), срез '
-                                                              '2026-05-21',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3418},
-                                                {'col_letter': 'X',
-                                                 'col_index': 24,
-                                                 'header': 'Всего документов 2-4 кв 2025',
-                                                 'target_field': 'SliceRecord.total',
-                                                 'transform': 'parse_strict_int; период 2025-04-01..2025-12-31',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3298},
-                                                {'col_letter': 'Y',
-                                                 'col_index': 25,
-                                                 'header': 'Долг 2-4 кв 2025 на 21.07.26',
-                                                 'target_field': 'SliceRecord.unsent',
-                                                 'transform': 'parse_strict_int; период 2025-04-01..2025-12-31, срез '
-                                                              '2026-07-21',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3298},
-                                                {'col_letter': 'Z',
-                                                 'col_index': 26,
-                                                 'header': '% Долга 2-4кв 2025 на 21.07.26',
-                                                 'target_field': 'SliceRecord.raw_percentage',
-                                                 'transform': 'parse_strict_float; сверка с unsent/total (±0.02), срез '
-                                                              '2026-07-21',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3298},
-                                                {'col_letter': 'AA',
-                                                 'col_index': 27,
-                                                 'header': 'Долг 2-4 кв 2025 на 07.07.26',
-                                                 'target_field': 'SliceRecord.unsent',
-                                                 'transform': 'parse_strict_int; период 2025-04-01..2025-12-31, срез '
-                                                              '2026-07-07',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3298},
-                                                {'col_letter': 'AB',
-                                                 'col_index': 28,
-                                                 'header': '% Долга 2-4кв 2025 на 07.07.26',
-                                                 'target_field': 'SliceRecord.raw_percentage',
-                                                 'transform': 'parse_strict_float; сверка с unsent/total (±0.02), срез '
-                                                              '2026-07-07',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3297},
-                                                {'col_letter': 'AC',
-                                                 'col_index': 29,
-                                                 'header': 'Долг 2-4 кв 2025 на 21.05.26',
-                                                 'target_field': 'SliceRecord.unsent',
-                                                 'transform': 'parse_strict_int; период 2025-04-01..2025-12-31, срез '
-                                                              '2026-05-21',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3297},
-                                                {'col_letter': 'AD',
-                                                 'col_index': 30,
-                                                 'header': '% Долга 2-4кв 2025 на 21.05.26',
-                                                 'target_field': 'SliceRecord.raw_percentage',
-                                                 'transform': 'parse_strict_float; сверка с unsent/total (±0.02), срез '
-                                                              '2026-05-21',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3297},
-                                                {'col_letter': 'AE',
-                                                 'col_index': 31,
-                                                 'header': 'Всего документов 1 кв 2026',
-                                                 'target_field': 'SliceRecord.total',
-                                                 'transform': 'parse_strict_int; период 2026-01-01..2026-03-31',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3181},
-                                                {'col_letter': 'AF',
-                                                 'col_index': 32,
-                                                 'header': 'Долг 1 кв 2026 на 29.09.26',
-                                                 'target_field': 'SliceRecord.unsent',
-                                                 'transform': 'parse_strict_int; период 2026-01-01..2026-03-31, срез '
-                                                              '2026-09-29',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3181},
-                                                {'col_letter': 'AG',
-                                                 'col_index': 33,
-                                                 'header': '% Долга 1 кв 2026 на 29.09.26',
-                                                 'target_field': 'SliceRecord.raw_percentage',
-                                                 'transform': 'parse_strict_float; сверка с unsent/total (±0.02), срез '
-                                                              '2026-09-29',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3181},
-                                                {'col_letter': 'AH',
-                                                 'col_index': 34,
-                                                 'header': 'Долг 1 кв 2026 на 21.07.26',
-                                                 'target_field': 'SliceRecord.unsent',
-                                                 'transform': 'parse_strict_int; период 2026-01-01..2026-03-31, срез '
-                                                              '2026-07-21',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 2928},
-                                                {'col_letter': 'AI',
-                                                 'col_index': 35,
-                                                 'header': '% Долга 1 кв 2026 на 21.07.26',
-                                                 'target_field': 'SliceRecord.raw_percentage',
-                                                 'transform': 'parse_strict_float; сверка с unsent/total (±0.02), срез '
-                                                              '2026-07-21',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 55},
-                                                {'col_letter': 'AJ',
-                                                 'col_index': 36,
-                                                 'header': 'Долг 1 кв 2026 на 07.07.26',
-                                                 'target_field': 'SliceRecord.unsent',
-                                                 'transform': 'parse_strict_int; период 2026-01-01..2026-03-31, срез '
-                                                              '2026-07-07',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 2928},
-                                                {'col_letter': 'AK',
-                                                 'col_index': 37,
-                                                 'header': '% Долга 1 кв 2026 на 07.07.26',
-                                                 'target_field': 'SliceRecord.raw_percentage',
-                                                 'transform': 'parse_strict_float; сверка с unsent/total (±0.02), срез '
-                                                              '2026-07-07',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 2928},
-                                                {'col_letter': 'AL',
-                                                 'col_index': 38,
-                                                 'header': 'Долг 1 кв 2026 на 21.05.26',
-                                                 'target_field': 'SliceRecord.unsent',
-                                                 'transform': 'parse_strict_int; период 2026-01-01..2026-03-31, срез '
-                                                              '2026-05-21',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3180},
-                                                {'col_letter': 'AM',
-                                                 'col_index': 39,
-                                                 'header': '% Долга 1 кв 2026 на 21.05.26',
-                                                 'target_field': 'SliceRecord.raw_percentage',
-                                                 'transform': 'parse_strict_float; сверка с unsent/total (±0.02), срез '
-                                                              '2026-05-21',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3180},
-                                                {'col_letter': 'AN',
-                                                 'col_index': 40,
-                                                 'header': 'Всего документов 2 кв 2025-1 кв 2026',
-                                                 'target_field': 'SliceRecord.total',
-                                                 'transform': 'parse_strict_int; период 2025-04-01..2026-03-31',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3657},
-                                                {'col_letter': 'AO',
-                                                 'col_index': 41,
-                                                 'header': 'Долг 2 кв 2025-1 кв 2026 на 21.07.26',
-                                                 'target_field': 'SliceRecord.unsent',
-                                                 'transform': 'parse_strict_int; период 2025-04-01..2026-03-31, срез '
-                                                              '2026-07-21',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3657},
-                                                {'col_letter': 'AP',
-                                                 'col_index': 42,
-                                                 'header': '% Долга 2 кв 2025-1 кв 2026 на 21.07.26',
-                                                 'target_field': 'SliceRecord.raw_percentage',
-                                                 'transform': 'parse_strict_float; сверка с unsent/total (±0.02), срез '
-                                                              '2026-07-21',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3657},
-                                                {'col_letter': 'AQ',
-                                                 'col_index': 43,
-                                                 'header': 'Долг 2 кв 2025-1 кв 2026 на 07.07.26',
-                                                 'target_field': 'SliceRecord.unsent',
-                                                 'transform': 'parse_strict_int; период 2025-04-01..2026-03-31, срез '
-                                                              '2026-07-07',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3657},
-                                                {'col_letter': 'AR',
-                                                 'col_index': 44,
-                                                 'header': '% Долга 2 кв 2025-1 кв 2026 на 07.07.26',
-                                                 'target_field': 'SliceRecord.raw_percentage',
-                                                 'transform': 'parse_strict_float; сверка с unsent/total (±0.02), срез '
-                                                              '2026-07-07',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3657},
-                                                {'col_letter': 'AS',
-                                                 'col_index': 45,
-                                                 'header': 'Долг 2 кв 2025-1 кв 2026 на 21.05.26',
-                                                 'target_field': 'SliceRecord.unsent',
-                                                 'transform': 'parse_strict_int; период 2025-04-01..2026-03-31, срез '
-                                                              '2026-05-21',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 5713},
-                                                {'col_letter': 'AT',
-                                                 'col_index': 46,
-                                                 'header': '% Долга 2 кв 2025-1 кв 2026 на 21.05.26',
-                                                 'target_field': 'SliceRecord.raw_percentage',
-                                                 'transform': 'parse_strict_float; сверка с unsent/total (±0.02), срез '
-                                                              '2026-05-21',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3656},
-                                                {'col_letter': 'AU',
-                                                 'col_index': 47,
-                                                 'header': 'Всего документов 3-4 кв 2025',
-                                                 'target_field': 'SliceRecord.total',
-                                                 'transform': 'parse_strict_int; период 2025-07-01..2025-12-31',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3153},
-                                                {'col_letter': 'AV',
-                                                 'col_index': 48,
-                                                 'header': 'Долг 3-4 кв 2025 на 29.09.26',
-                                                 'target_field': 'SliceRecord.unsent',
-                                                 'transform': 'parse_strict_int; период 2025-07-01..2025-12-31, срез '
-                                                              '2026-09-29',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3298},
-                                                {'col_letter': 'AW',
-                                                 'col_index': 49,
-                                                 'header': '% Долг 3-4 кв 2025 на 29.09.26',
-                                                 'target_field': 'SliceRecord.raw_percentage',
-                                                 'transform': 'parse_strict_float; сверка с unsent/total (±0.02), срез '
-                                                              '2026-09-29',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3153},
-                                                {'col_letter': 'AX',
-                                                 'col_index': 50,
-                                                 'header': 'Долг 3-4 кв 2025 на 21.07.26',
-                                                 'target_field': 'SliceRecord.unsent',
-                                                 'transform': 'parse_strict_int; период 2025-07-01..2025-12-31, срез '
-                                                              '2026-07-21',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3153},
-                                                {'col_letter': 'AY',
-                                                 'col_index': 51,
-                                                 'header': '% Долг 3-4 кв 2025 на 21.07.26',
-                                                 'target_field': 'SliceRecord.raw_percentage',
-                                                 'transform': 'parse_strict_float; сверка с unsent/total (±0.02), срез '
-                                                              '2026-07-21',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3153},
-                                                {'col_letter': 'AZ',
-                                                 'col_index': 52,
-                                                 'header': 'Всего документов 2 кв 2026',
-                                                 'target_field': 'SliceRecord.total',
-                                                 'transform': 'parse_strict_int; период 2026-04-01..2026-06-30',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3021},
-                                                {'col_letter': 'BA',
-                                                 'col_index': 53,
-                                                 'header': 'Долг 2 кв 2026 на 29.09.26',
-                                                 'target_field': 'SliceRecord.unsent',
-                                                 'transform': 'parse_strict_int; период 2026-04-01..2026-06-30, срез '
-                                                              '2026-09-29',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3021},
-                                                {'col_letter': 'BB',
-                                                 'col_index': 54,
-                                                 'header': '% Долг 2 кв 2026 на 29.09.26',
-                                                 'target_field': 'SliceRecord.raw_percentage',
-                                                 'transform': 'parse_strict_float; сверка с unsent/total (±0.02), срез '
-                                                              '2026-09-29',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3021},
-                                                {'col_letter': 'BC',
-                                                 'col_index': 55,
-                                                 'header': 'Долг 2 кв 2026 на 21.07.26',
-                                                 'target_field': 'SliceRecord.unsent',
-                                                 'transform': 'parse_strict_int; период 2026-04-01..2026-06-30, срез '
-                                                              '2026-07-21',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3021},
-                                                {'col_letter': 'BD',
-                                                 'col_index': 56,
-                                                 'header': '% Долг 2 кв 2026 на 21.07.26',
-                                                 'target_field': 'SliceRecord.raw_percentage',
-                                                 'transform': 'parse_strict_float; сверка с unsent/total (±0.02), срез '
-                                                              '2026-07-21',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 2591},
-                                                {'col_letter': 'BE',
-                                                 'col_index': 57,
-                                                 'header': 'Всего документов 3 кв 2025 - 2 кв 2026',
-                                                 'target_field': 'SliceRecord.total',
-                                                 'transform': 'parse_strict_int; период 2025-07-01..2026-06-30',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3666},
-                                                {'col_letter': 'BF',
-                                                 'col_index': 58,
-                                                 'header': 'Долг по документам 3 кв 2025-2 кв 2026 на 29.09.26',
-                                                 'target_field': 'SliceRecord.unsent',
-                                                 'transform': 'parse_strict_int; период 2025-07-01..2026-06-30, срез '
-                                                              '2026-09-29',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3666},
-                                                {'col_letter': 'BG',
-                                                 'col_index': 59,
-                                                 'header': '% Долг по документам 3 кв 2025-2 кв 2026 на 29.09.26',
-                                                 'target_field': 'SliceRecord.raw_percentage',
-                                                 'transform': 'parse_strict_float; сверка с unsent/total (±0.02), срез '
-                                                              '2026-09-29',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3666},
-                                                {'col_letter': 'BH',
-                                                 'col_index': 60,
-                                                 'header': 'Долг по документам 3 кв 2025-2 кв 2026 на 21.07.26',
-                                                 'target_field': 'SliceRecord.unsent',
-                                                 'transform': 'parse_strict_int; период 2025-07-01..2026-06-30, срез '
-                                                              '2026-07-21',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3666},
-                                                {'col_letter': 'BI',
-                                                 'col_index': 61,
-                                                 'header': '% Долг по документам 3 кв 2025-2 кв 2026 на 21.07.26',
-                                                 'target_field': 'SliceRecord.raw_percentage',
-                                                 'transform': 'parse_strict_float; сверка с unsent/total (±0.02), срез '
-                                                              '2026-07-21',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3666},
-                                                {'col_letter': 'BJ',
-                                                 'col_index': 62,
-                                                 'header': 'Всего документов весь 2025 - 2 кв 2026',
-                                                 'target_field': 'SliceRecord.total',
-                                                 'transform': 'parse_strict_int; период 2025-01-01..2026-06-30',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3846},
-                                                {'col_letter': 'BK',
-                                                 'col_index': 63,
-                                                 'header': 'Долг по документам  весь 2025 - 2 кв 2026 на 29.09.26',
-                                                 'target_field': 'SliceRecord.unsent',
-                                                 'transform': 'parse_strict_int; период 2025-01-01..2026-06-30, срез '
-                                                              '2026-09-29',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3846},
-                                                {'col_letter': 'BL',
-                                                 'col_index': 64,
-                                                 'header': '% Долг по документам  весь 2025 - 2 кв 2026 на 29.09.26',
-                                                 'target_field': 'SliceRecord.raw_percentage',
-                                                 'transform': 'parse_strict_float; сверка с unsent/total (±0.02), срез '
-                                                              '2026-09-29',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3846},
-                                                {'col_letter': 'BM',
-                                                 'col_index': 65,
-                                                 'header': 'Долг по документам  весь 2025 - 2 кв 2026 на 21.07.26',
-                                                 'target_field': 'SliceRecord.unsent',
-                                                 'transform': 'parse_strict_int; период 2025-01-01..2026-06-30, срез '
-                                                              '2026-07-21',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3846},
-                                                {'col_letter': 'BN',
-                                                 'col_index': 66,
-                                                 'header': '% Долг по документам  весь 2025 - 2 кв 2026 на 21.07.26',
-                                                 'target_field': 'SliceRecord.raw_percentage',
-                                                 'transform': 'parse_strict_float; сверка с unsent/total (±0.02), срез '
-                                                              '2026-07-21',
-                                                 'exclusion_reason': None,
-                                                 'header_row': 2,
-                                                 'nonempty_cells_below_header': 3846}],
- 'Срез 20.10.26_Дубна.xlsx::весь 2025 год': [{'col_letter': 'A',
-                                              'col_index': 1,
-                                              'header': 'Уникальны обезличинный идентификатор',
-                                              'target_field': 'SliceRecord.source_client_id',
-                                              'transform': 'Сопоставление с белым списком; неизвестные -> '
-                                                           'UNKNOWN_CLIENT_ID (blocked)',
-                                              'exclusion_reason': None,
-                                              'header_row': 2,
-                                              'nonempty_cells_below_header': 3419},
-                                             {'col_letter': 'B',
-                                              'col_index': 2,
-                                              'header': 'Код КЦР',
-                                              'target_field': 'ClientRecord.kcr_code',
-                                              'transform': 'clean_optional_str (обогащение карточки клиента при '
-                                                           'наличии)',
-                                              'exclusion_reason': None,
-                                              'header_row': 2,
-                                              'nonempty_cells_below_header': 0},
-                                             {'col_letter': 'C',
-                                              'col_index': 3,
-                                              'header': 'Наитменование организации',
-                                              'target_field': 'ClientRecord.organization_name',
-                                              'transform': 'clean_optional_str (обогащение карточки клиента при '
-                                                           'наличии)',
-                                              'exclusion_reason': None,
-                                              'header_row': 2,
-                                              'nonempty_cells_below_header': 0},
-                                             {'col_letter': 'D',
-                                              'col_index': 4,
-                                              'header': 'документов всего',
-                                              'target_field': 'SliceRecord.total',
-                                              'transform': 'parse_strict_int; период 2025-01-01..2025-12-31, срез '
-                                                           '2026-10-20',
-                                              'exclusion_reason': None,
-                                              'header_row': 2,
-                                              'nonempty_cells_below_header': 3419},
-                                             {'col_letter': 'E',
-                                              'col_index': 5,
-                                              'header': 'Всего не отправлено документов',
-                                              'target_field': 'SliceRecord.unsent',
-                                              'transform': 'parse_strict_int; период 2025-01-01..2025-12-31, срез '
-                                                           '2026-10-20',
-                                              'exclusion_reason': None,
-                                              'header_row': 2,
-                                              'nonempty_cells_below_header': 3419}],
- 'Срез 20.10.26_Дубна.xlsx::1 кв 2026': [{'col_letter': 'A',
-                                          'col_index': 1,
-                                          'header': 'Уникальны обезличинный идентификатор',
-                                          'target_field': 'SliceRecord.source_client_id',
-                                          'transform': 'Сопоставление с белым списком; неизвестные -> '
-                                                       'UNKNOWN_CLIENT_ID (blocked)',
-                                          'exclusion_reason': None,
-                                          'header_row': 2,
-                                          'nonempty_cells_below_header': 2928},
-                                         {'col_letter': 'B',
-                                          'col_index': 2,
-                                          'header': 'код СЦ',
-                                          'target_field': 'ClientRecord.service_center',
-                                          'transform': 'clean_optional_str (обогащение карточки клиента при наличии)',
-                                          'exclusion_reason': None,
-                                          'header_row': 2,
-                                          'nonempty_cells_below_header': 0},
-                                         {'col_letter': 'C',
-                                          'col_index': 3,
-                                          'header': 'название СЦ',
-                                          'target_field': 'ClientRecord.service_center',
-                                          'transform': 'clean_optional_str (обогащение карточки клиента при наличии)',
-                                          'exclusion_reason': None,
-                                          'header_row': 2,
-                                          'nonempty_cells_below_header': 0},
-                                         {'col_letter': 'D',
-                                          'col_index': 4,
-                                          'header': 'документов всего',
-                                          'target_field': 'SliceRecord.total',
-                                          'transform': 'parse_strict_int; период 2026-01-01..2026-03-31, срез '
-                                                       '2026-10-20',
-                                          'exclusion_reason': None,
-                                          'header_row': 2,
-                                          'nonempty_cells_below_header': 2928},
-                                         {'col_letter': 'E',
-                                          'col_index': 5,
-                                          'header': 'Всего не отправлено документов',
-                                          'target_field': 'SliceRecord.unsent',
-                                          'transform': 'parse_strict_int; период 2026-01-01..2026-03-31, срез '
-                                                       '2026-10-20',
-                                          'exclusion_reason': None,
-                                          'header_row': 2,
-                                          'nonempty_cells_below_header': 2928}],
- 'Срез 20.10.26_Дубна.xlsx::2 кв 2026': [{'col_letter': 'A',
-                                          'col_index': 1,
-                                          'header': 'Уникальны обезличинный идентификатор',
-                                          'target_field': 'SliceRecord.source_client_id',
-                                          'transform': 'Сопоставление с белым списком; неизвестные -> '
-                                                       'UNKNOWN_CLIENT_ID (blocked)',
-                                          'exclusion_reason': None,
-                                          'header_row': 2,
-                                          'nonempty_cells_below_header': 3021},
-                                         {'col_letter': 'B',
-                                          'col_index': 2,
-                                          'header': 'код СЦ',
-                                          'target_field': 'ClientRecord.service_center',
-                                          'transform': 'clean_optional_str (обогащение карточки клиента при наличии)',
-                                          'exclusion_reason': None,
-                                          'header_row': 2,
-                                          'nonempty_cells_below_header': 0},
-                                         {'col_letter': 'C',
-                                          'col_index': 3,
-                                          'header': 'название СЦ',
-                                          'target_field': 'ClientRecord.service_center',
-                                          'transform': 'clean_optional_str (обогащение карточки клиента при наличии)',
-                                          'exclusion_reason': None,
-                                          'header_row': 2,
-                                          'nonempty_cells_below_header': 0},
-                                         {'col_letter': 'D',
-                                          'col_index': 4,
-                                          'header': 'документов всего',
-                                          'target_field': 'SliceRecord.total',
-                                          'transform': 'parse_strict_int; период 2026-04-01..2026-06-30, срез '
-                                                       '2026-10-20',
-                                          'exclusion_reason': None,
-                                          'header_row': 2,
-                                          'nonempty_cells_below_header': 3021},
-                                         {'col_letter': 'E',
-                                          'col_index': 5,
-                                          'header': 'Всего не отправлено документов',
-                                          'target_field': 'SliceRecord.unsent',
-                                          'transform': 'parse_strict_int; период 2026-04-01..2026-06-30, срез '
-                                                       '2026-10-20',
-                                          'exclusion_reason': None,
-                                          'header_row': 2,
-                                          'nonempty_cells_below_header': 3021}],
- 'Срез 20.10.26_Дубна.xlsx::3 кв 2026': [{'col_letter': 'A',
-                                          'col_index': 1,
-                                          'header': 'Уникальны обезличинный идентификатор',
-                                          'target_field': 'SliceRecord.source_client_id',
-                                          'transform': 'Сопоставление с белым списком; неизвестные -> '
-                                                       'UNKNOWN_CLIENT_ID (blocked)',
-                                          'exclusion_reason': None,
-                                          'header_row': 2,
-                                          'nonempty_cells_below_header': 3404},
-                                         {'col_letter': 'B',
-                                          'col_index': 2,
-                                          'header': 'код СЦ',
-                                          'target_field': 'ClientRecord.service_center',
-                                          'transform': 'clean_optional_str (обогащение карточки клиента при наличии)',
-                                          'exclusion_reason': None,
-                                          'header_row': 2,
-                                          'nonempty_cells_below_header': 0},
-                                         {'col_letter': 'C',
-                                          'col_index': 3,
-                                          'header': 'название СЦ',
-                                          'target_field': 'ClientRecord.service_center',
-                                          'transform': 'clean_optional_str (обогащение карточки клиента при наличии)',
-                                          'exclusion_reason': None,
-                                          'header_row': 2,
-                                          'nonempty_cells_below_header': 0},
-                                         {'col_letter': 'D',
-                                          'col_index': 4,
-                                          'header': 'документов всего',
-                                          'target_field': 'SliceRecord.total',
-                                          'transform': 'parse_strict_int; период 2026-07-01..2026-09-30, срез '
-                                                       '2026-10-20',
-                                          'exclusion_reason': None,
-                                          'header_row': 2,
-                                          'nonempty_cells_below_header': 3404},
-                                         {'col_letter': 'E',
-                                          'col_index': 5,
-                                          'header': 'Всего не отправлено документов',
-                                          'target_field': 'SliceRecord.unsent',
-                                          'transform': 'parse_strict_int; период 2026-07-01..2026-09-30, срез '
-                                                       '2026-10-20',
-                                          'exclusion_reason': None,
-                                          'header_row': 2,
-                                          'nonempty_cells_below_header': 3404}],
- 'База должники III кв 2025 Дубна.xlsx::1-3 кв 25': [{'col_letter': 'A',
-                                                      'col_index': 1,
-                                                      'header': 'Уникальны обезличинный идентификатор',
-                                                      'target_field': 'source_client_id',
-                                                      'transform': 'str.strip(); сверка с реестром клиентов',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 295},
-                                                     {'col_letter': 'B',
-                                                      'col_index': 2,
-                                                      'header': 'Код КЦР',
-                                                      'target_field': 'ClientRecord.kcr_code',
-                                                      'transform': 'clean_optional_str (обогащение карточки клиента)',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 0},
-                                                     {'col_letter': 'C',
-                                                      'col_index': 3,
-                                                      'header': 'название СЦ',
-                                                      'target_field': 'ClientRecord.service_center',
-                                                      'transform': 'clean_optional_str (обогащение карточки клиента)',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 0},
-                                                     {'col_letter': 'D',
-                                                      'col_index': 4,
-                                                      'header': 'Дата создания КЦР',
-                                                      'target_field': 'ClientRecord.creation_date',
-                                                      'transform': 'parse_iso_date (обогащение карточки клиента)',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 0},
-                                                     {'col_letter': 'E',
-                                                      'col_index': 5,
-                                                      'header': 'Время от Екб',
-                                                      'target_field': 'ClientRecord.time_zone_offset',
-                                                      'transform': 'clean_optional_str (обогащение карточки клиента)',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 0},
-                                                     {'col_letter': 'F',
-                                                      'col_index': 6,
-                                                      'header': 'ФИО главного админа',
-                                                      'target_field': 'ClientRecord.admin_name',
-                                                      'transform': 'clean_optional_str (истинное ФИО главного '
-                                                                   'администратора)',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 0},
-                                                     {'col_letter': 'G',
-                                                      'col_index': 7,
-                                                      'header': 'Телефон админа',
-                                                      'target_field': 'ClientRecord.admin_phone',
-                                                      'transform': 'clean_optional_str (телефон администратора из '
-                                                                   'выделенной колонки)',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 0},
-                                                     {'col_letter': 'H',
-                                                      'col_index': 8,
-                                                      'header': 'Email админа',
-                                                      'target_field': 'ClientRecord.admin_email',
-                                                      'transform': 'clean_optional_str (email администратора из '
-                                                                   'выделенной колонки)',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 0},
-                                                     {'col_letter': 'I',
-                                                      'col_index': 9,
-                                                      'header': '% долга за весь 2025 на 27.03.26',
-                                                      'target_field': None,
-                                                      'transform': 'Сохранение исходного значения и координат в '
-                                                                   'source_preserved_values.jsonl при наличии значения.',
-                                                      'exclusion_reason': 'Не включено в текущие '
-                                                                          'ClientRecord/SliceRecord/HistoryRecord; '
-                                                                          'сохранено без трактовки в '
-                                                                          'source_preserved_values.jsonl. Нормализация '
-                                                                          'требует согласования.',
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 295},
-                                                     {'col_letter': 'J',
-                                                      'col_index': 10,
-                                                      'header': 'коммаентарий для претензии',
-                                                      'target_field': 'HistoryRecord(claim_comment).text',
-                                                      'transform': 'Дословное сохранение текста претензии (52 записи), '
-                                                                   "source_column='J'",
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 52},
-                                                     {'col_letter': 'K',
-                                                      'col_index': 11,
-                                                      'header': 'Статус на 26.05.26',
-                                                      'target_field': 'HistoryRecord(historical_status).raw_status',
-                                                      'transform': "occurred_at='2026-05-26', source_column='K' (184 "
-                                                                   'записи)',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 184},
-                                                     {'col_letter': 'L',
-                                                      'col_index': 12,
-                                                      'header': 'Статус на 27.03.26',
-                                                      'target_field': 'HistoryRecord(historical_status).raw_status',
-                                                      'transform': "occurred_at='2026-03-27', source_column='L' (295 "
-                                                                   'записей)',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 295},
-                                                     {'col_letter': 'M',
-                                                      'col_index': 13,
-                                                      'header': 'Статус на 13.03.26',
-                                                      'target_field': 'HistoryRecord(historical_status).raw_status',
-                                                      'transform': "occurred_at='2026-03-13', source_column='M' (295 "
-                                                                   'записей)',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 295},
-                                                     {'col_letter': 'N',
-                                                      'col_index': 14,
-                                                      'header': 'Статус на 02.03.26',
-                                                      'target_field': 'HistoryRecord(historical_status).raw_status',
-                                                      'transform': "occurred_at='2026-03-02', source_column='N' (32 "
-                                                                   'записи)',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 32},
-                                                     {'col_letter': 'O',
-                                                      'col_index': 15,
-                                                      'header': 'Статус на 16.01.26',
-                                                      'target_field': 'HistoryRecord(historical_status).raw_status',
-                                                      'transform': "occurred_at='2026-01-16', source_column='O' (294 "
-                                                                   'записи)',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 294},
-                                                     {'col_letter': 'P',
-                                                      'col_index': 16,
-                                                      'header': 'Статус на 29.12.25',
-                                                      'target_field': 'HistoryRecord(historical_status).raw_status',
-                                                      'transform': "occurred_at='2025-12-29', source_column='P' (295 "
-                                                                   'записей)',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 295},
-                                                     {'col_letter': 'Q',
-                                                      'col_index': 17,
-                                                      'header': 'Статус на 5.12.25',
-                                                      'target_field': 'HistoryRecord(historical_status).raw_status',
-                                                      'transform': "occurred_at='2025-12-05', source_column='Q' (295 "
-                                                                   'записей)',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 295},
-                                                     {'col_letter': 'R',
-                                                      'col_index': 18,
-                                                      'header': 'админ в нескольких кцр',
-                                                      'target_field': None,
-                                                      'transform': 'Сохранение исходного значения и координат в '
-                                                                   'source_preserved_values.jsonl при наличии значения.',
-                                                      'exclusion_reason': 'Не включено в текущие '
-                                                                          'ClientRecord/SliceRecord/HistoryRecord; '
-                                                                          'сохранено без трактовки в '
-                                                                          'source_preserved_values.jsonl. Нормализация '
-                                                                          'требует согласования.',
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 295},
-                                                     {'col_letter': 'S',
-                                                      'col_index': 19,
-                                                      'header': 'Документов всего за 2025 год',
-                                                      'target_field': 'SliceRecord.total',
-                                                      'transform': 'parse_strict_int; базовый total для 6 '
-                                                                   'ретроспективных срезов 2025 года',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 296},
-                                                     {'col_letter': 'T',
-                                                      'col_index': 20,
-                                                      'header': 'Долг на 27.03.26',
-                                                      'target_field': 'SliceRecord.unsent',
-                                                      'transform': 'parse_strict_int; период 2025-01-01..2025-12-31, '
-                                                                   'срез 2026-03-27',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 296},
-                                                     {'col_letter': 'U',
-                                                      'col_index': 21,
-                                                      'header': '% Долга на 27.03.26',
-                                                      'target_field': 'SliceRecord.raw_percentage',
-                                                      'transform': 'parse_strict_float; срез 2026-03-27',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 296},
-                                                     {'col_letter': 'V',
-                                                      'col_index': 22,
-                                                      'header': 'Уменьшение долга октябрь vs март',
-                                                      'target_field': None,
-                                                      'transform': 'Сохранение исходного значения и координат в '
-                                                                   'source_preserved_values.jsonl при наличии значения.',
-                                                      'exclusion_reason': 'Не включено в текущие '
-                                                                          'ClientRecord/SliceRecord/HistoryRecord; '
-                                                                          'сохранено без трактовки в '
-                                                                          'source_preserved_values.jsonl. Нормализация '
-                                                                          'требует согласования.',
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 295},
-                                                     {'col_letter': 'W',
-                                                      'col_index': 23,
-                                                      'header': 'долг на 16.01.25',
-                                                      'target_field': 'SliceRecord.unsent (rejected)',
-                                                      'transform': 'Изолируется в rejected_slices.jsonl из-за '
-                                                                   'противоречия даты с колонкой X (16.01.25 vs '
-                                                                   '16.01.26)',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 296},
-                                                     {'col_letter': 'X',
-                                                      'col_index': 24,
-                                                      'header': '% Долга на 16.01.26',
-                                                      'target_field': 'SliceRecord.raw_percentage (rejected)',
-                                                      'transform': 'Изолируется в rejected_slices.jsonl '
-                                                                   '(AMBIGUOUS_AS_OF_DATE:2025-01-16_vs_2026-01-16)',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 296},
-                                                     {'col_letter': 'Y',
-                                                      'col_index': 25,
-                                                      'header': 'Уменьшение долга ноябрь vs январь',
-                                                      'target_field': None,
-                                                      'transform': 'Сохранение исходного значения и координат в '
-                                                                   'source_preserved_values.jsonl при наличии значения.',
-                                                      'exclusion_reason': 'Не включено в текущие '
-                                                                          'ClientRecord/SliceRecord/HistoryRecord; '
-                                                                          'сохранено без трактовки в '
-                                                                          'source_preserved_values.jsonl. Нормализация '
-                                                                          'требует согласования.',
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 296},
-                                                     {'col_letter': 'Z',
-                                                      'col_index': 26,
-                                                      'header': '% уменьшение долга ноябрь vs январь',
-                                                      'target_field': None,
-                                                      'transform': 'Сохранение исходного значения и координат в '
-                                                                   'source_preserved_values.jsonl при наличии значения.',
-                                                      'exclusion_reason': 'Не включено в текущие '
-                                                                          'ClientRecord/SliceRecord/HistoryRecord; '
-                                                                          'сохранено без трактовки в '
-                                                                          'source_preserved_values.jsonl. Нормализация '
-                                                                          'требует согласования.',
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 295},
-                                                     {'col_letter': 'AA',
-                                                      'col_index': 27,
-                                                      'header': 'долг на 05.12.25',
-                                                      'target_field': 'SliceRecord.unsent',
-                                                      'transform': 'parse_strict_int; период 2025-01-01..2025-12-31, '
-                                                                   'срез 2025-12-05',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 296},
-                                                     {'col_letter': 'AB',
-                                                      'col_index': 28,
-                                                      'header': '% Долга на 05.12.25',
-                                                      'target_field': 'SliceRecord.raw_percentage',
-                                                      'transform': 'parse_strict_float; срез 2025-12-05',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 296},
-                                                     {'col_letter': 'AC',
-                                                      'col_index': 29,
-                                                      'header': 'Уменьшение долга ноябрь vs декабрь',
-                                                      'target_field': None,
-                                                      'transform': 'Сохранение исходного значения и координат в '
-                                                                   'source_preserved_values.jsonl при наличии значения.',
-                                                      'exclusion_reason': 'Не включено в текущие '
-                                                                          'ClientRecord/SliceRecord/HistoryRecord; '
-                                                                          'сохранено без трактовки в '
-                                                                          'source_preserved_values.jsonl. Нормализация '
-                                                                          'требует согласования.',
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 296},
-                                                     {'col_letter': 'AD',
-                                                      'col_index': 30,
-                                                      'header': '% уменьшение долга ноябрь vs декабрь',
-                                                      'target_field': None,
-                                                      'transform': 'Сохранение исходного значения и координат в '
-                                                                   'source_preserved_values.jsonl при наличии значения.',
-                                                      'exclusion_reason': 'Не включено в текущие '
-                                                                          'ClientRecord/SliceRecord/HistoryRecord; '
-                                                                          'сохранено без трактовки в '
-                                                                          'source_preserved_values.jsonl. Нормализация '
-                                                                          'требует согласования.',
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 296},
-                                                     {'col_letter': 'AE',
-                                                      'col_index': 31,
-                                                      'header': 'долг на 05.11.25',
-                                                      'target_field': 'SliceRecord.unsent',
-                                                      'transform': 'parse_strict_int; период 2025-01-01..2025-12-31, '
-                                                                   'срез 2025-11-05',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 296},
-                                                     {'col_letter': 'AF',
-                                                      'col_index': 32,
-                                                      'header': '% Долга на 05.11.25',
-                                                      'target_field': 'SliceRecord.raw_percentage',
-                                                      'transform': 'parse_strict_float; срез 2025-11-05',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 296},
-                                                     {'col_letter': 'AG',
-                                                      'col_index': 33,
-                                                      'header': 'долг на 31.10.25',
-                                                      'target_field': 'SliceRecord.unsent',
-                                                      'transform': 'parse_strict_int; период 2025-01-01..2025-12-31, '
-                                                                   'срез 2025-10-31 (#N/A -> rejected)',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 295},
-                                                     {'col_letter': 'AH',
-                                                      'col_index': 34,
-                                                      'header': '% Долга на 31.10.25',
-                                                      'target_field': 'SliceRecord.raw_percentage',
-                                                      'transform': 'parse_strict_float; срез 2025-10-31 (#N/A -> '
-                                                                   'rejected)',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 295},
-                                                     {'col_letter': 'AI',
-                                                      'col_index': 35,
-                                                      'header': 'долг на 20.10.25',
-                                                      'target_field': 'SliceRecord.unsent',
-                                                      'transform': 'parse_strict_int; период 2025-01-01..2025-12-31, '
-                                                                   'срез 2025-10-20',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 295},
-                                                     {'col_letter': 'AJ',
-                                                      'col_index': 36,
-                                                      'header': 'отклонено',
-                                                      'target_field': None,
-                                                      'transform': 'Сохранение исходного значения и координат в '
-                                                                   'source_preserved_values.jsonl при наличии значения.',
-                                                      'exclusion_reason': 'Не включено в текущие '
-                                                                          'ClientRecord/SliceRecord/HistoryRecord; '
-                                                                          'сохранено без трактовки в '
-                                                                          'source_preserved_values.jsonl. Нормализация '
-                                                                          'требует согласования.',
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 295},
-                                                     {'col_letter': 'AK',
-                                                      'col_index': 37,
-                                                      'header': 'на исправлении',
-                                                      'target_field': None,
-                                                      'transform': 'Сохранение исходного значения и координат в '
-                                                                   'source_preserved_values.jsonl при наличии значения.',
-                                                      'exclusion_reason': 'Не включено в текущие '
-                                                                          'ClientRecord/SliceRecord/HistoryRecord; '
-                                                                          'сохранено без трактовки в '
-                                                                          'source_preserved_values.jsonl. Нормализация '
-                                                                          'требует согласования.',
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 295},
-                                                     {'col_letter': 'AL',
-                                                      'col_index': 38,
-                                                      'header': '% долга',
-                                                      'target_field': None,
-                                                      'transform': 'Сохранение исходного значения и координат в '
-                                                                   'source_preserved_values.jsonl при наличии значения.',
-                                                      'exclusion_reason': 'Не включено в текущие '
-                                                                          'ClientRecord/SliceRecord/HistoryRecord; '
-                                                                          'сохранено без трактовки в '
-                                                                          'source_preserved_values.jsonl. Нормализация '
-                                                                          'требует согласования.',
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 295},
-                                                     {'col_letter': 'AM',
-                                                      'col_index': 39,
-                                                      'header': 'отправлено',
-                                                      'target_field': None,
-                                                      'transform': 'Сохранение исходного значения и координат в '
-                                                                   'source_preserved_values.jsonl при наличии значения.',
-                                                      'exclusion_reason': 'Не включено в текущие '
-                                                                          'ClientRecord/SliceRecord/HistoryRecord; '
-                                                                          'сохранено без трактовки в '
-                                                                          'source_preserved_values.jsonl. Нормализация '
-                                                                          'требует согласования.',
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 295},
-                                                     {'col_letter': 'AN',
-                                                      'col_index': 40,
-                                                      'header': 'принято',
-                                                      'target_field': None,
-                                                      'transform': 'Сохранение исходного значения и координат в '
-                                                                   'source_preserved_values.jsonl при наличии значения.',
-                                                      'exclusion_reason': 'Не включено в текущие '
-                                                                          'ClientRecord/SliceRecord/HistoryRecord; '
-                                                                          'сохранено без трактовки в '
-                                                                          'source_preserved_values.jsonl. Нормализация '
-                                                                          'требует согласования.',
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 295},
-                                                     {'col_letter': 'AO',
-                                                      'col_index': 41,
-                                                      'header': 'Статус на 20.10.25',
-                                                      'target_field': 'HistoryRecord(historical_status).raw_status',
-                                                      'transform': "occurred_at='2025-10-20', source_column='AO' (295 "
-                                                                   'записей)',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 295},
-                                                     {'col_letter': 'AP',
-                                                      'col_index': 42,
-                                                      'header': 'Статус на 05.11.25',
-                                                      'target_field': 'HistoryRecord(historical_status).raw_status',
-                                                      'transform': "occurred_at='2025-11-05', source_column='AP' (295 "
-                                                                   'записей)',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 295},
-                                                     {'col_letter': 'AQ',
-                                                      'col_index': 43,
-                                                      'header': 'Арина 14.10.25',
-                                                      'target_field': None,
-                                                      'transform': 'Сохранение исходного значения и координат в '
-                                                                   'source_preserved_values.jsonl при наличии значения.',
-                                                      'exclusion_reason': 'Не включено в текущие '
-                                                                          'ClientRecord/SliceRecord/HistoryRecord; '
-                                                                          'сохранено без трактовки в '
-                                                                          'source_preserved_values.jsonl. Нормализация '
-                                                                          'требует согласования.',
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 295},
-                                                     {'col_letter': 'AR',
-                                                      'col_index': 44,
-                                                      'header': 'Отправляли посылку без описи',
-                                                      'target_field': None,
-                                                      'transform': 'Сохранение исходного значения и координат в '
-                                                                   'source_preserved_values.jsonl при наличии значения.',
-                                                      'exclusion_reason': 'Не включено в текущие '
-                                                                          'ClientRecord/SliceRecord/HistoryRecord; '
-                                                                          'сохранено без трактовки в '
-                                                                          'source_preserved_values.jsonl. Нормализация '
-                                                                          'требует согласования.',
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 295},
-                                                     {'col_letter': 'AS',
-                                                      'col_index': 45,
-                                                      'header': 'Ответственный ООВС',
-                                                      'target_field': None,
-                                                      'transform': 'Сохранение исходного значения и координат в '
-                                                                   'source_preserved_values.jsonl при наличии значения.',
-                                                      'exclusion_reason': 'Нет непустых значений ниже заголовка в '
-                                                                          'предоставленном файле.',
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 0},
-                                                     {'col_letter': 'AT',
-                                                      'col_index': 46,
-                                                      'header': 'Комментарии ООВС',
-                                                      'target_field': 'HistoryRecord(first_contact).text',
-                                                      'transform': 'Дословный текст комментария первого касания '
-                                                                   "(source_column='AT-AX')",
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 295},
-                                                     {'col_letter': 'AU',
-                                                      'col_index': 47,
-                                                      'header': 'Статус звонка',
-                                                      'target_field': 'HistoryRecord(first_contact).raw_status',
-                                                      'transform': 'Дословный статус первого звонка '
-                                                                   "(source_column='AT-AX')",
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 295},
-                                                     {'col_letter': 'AV',
-                                                      'col_index': 48,
-                                                      'header': 'Дата перезвона',
-                                                      'target_field': 'HistoryRecord(first_contact).next_contact_date '
-                                                                      '/ raw_next_contact',
-                                                      'transform': 'parse_iso_date + сохранение некалендарного текста '
-                                                                   'и NON_DATE_NEXT_CONTACT',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 0},
-                                                     {'col_letter': 'AW',
-                                                      'col_index': 49,
-                                                      'header': 'Срок отправки от клиента',
-                                                      'target_field': 'HistoryRecord(first_contact).raw_send_deadline',
-                                                      'transform': 'Сохраняется в raw_send_deadline и в объединённом '
-                                                                   'raw_deadline',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 282},
-                                                     {'col_letter': 'AX',
-                                                      'col_index': 50,
-                                                      'header': 'Дата от клиента',
-                                                      'target_field': 'HistoryRecord(first_contact).raw_client_date',
-                                                      'transform': 'Сохраняется в raw_client_date (62 записи) и в '
-                                                                   'объединённом raw_deadline',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 62},
-                                                     {'col_letter': 'AY',
-                                                      'col_index': 51,
-                                                      'header': 'Звоним в январе?',
-                                                      'target_field': None,
-                                                      'transform': 'Сохранение исходного значения и координат в '
-                                                                   'source_preserved_values.jsonl при наличии значения.',
-                                                      'exclusion_reason': 'Не включено в текущие '
-                                                                          'ClientRecord/SliceRecord/HistoryRecord; '
-                                                                          'сохранено без трактовки в '
-                                                                          'source_preserved_values.jsonl. Нормализация '
-                                                                          'требует согласования.',
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 295},
-                                                     {'col_letter': 'AZ',
-                                                      'col_index': 52,
-                                                      'header': 'Ответственный ООВС',
-                                                      'target_field': None,
-                                                      'transform': 'Сохранение исходного значения и координат в '
-                                                                   'source_preserved_values.jsonl при наличии значения.',
-                                                      'exclusion_reason': 'Нет непустых значений ниже заголовка в '
-                                                                          'предоставленном файле.',
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 0},
-                                                     {'col_letter': 'BA',
-                                                      'col_index': 53,
-                                                      'header': 'Комментарий к повторному звонку',
-                                                      'target_field': 'HistoryRecord(second_contact).text',
-                                                      'transform': 'Дословный комментарий повторного звонка в январе '
-                                                                   "(source_column='BA-BE')",
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 152},
-                                                     {'col_letter': 'BB',
-                                                      'col_index': 54,
-                                                      'header': 'Статус звонка в январе',
-                                                      'target_field': 'HistoryRecord(second_contact).raw_status',
-                                                      'transform': 'Дословный статус повторного звонка в январе (278 '
-                                                                   'записей)',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 278},
-                                                     {'col_letter': 'BC',
-                                                      'col_index': 55,
-                                                      'header': 'Дата перезвона',
-                                                      'target_field': 'HistoryRecord(second_contact).next_contact_date '
-                                                                      '/ raw_next_contact',
-                                                      'transform': 'parse_iso_date + сохранение сырого текста и '
-                                                                   'NON_DATE_NEXT_CONTACT',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 5},
-                                                     {'col_letter': 'BD',
-                                                      'col_index': 56,
-                                                      'header': 'Срок отправки по клиенту',
-                                                      'target_field': 'HistoryRecord(second_contact).raw_send_deadline',
-                                                      'transform': 'Сохраняется в raw_send_deadline (229 записей) и в '
-                                                                   'raw_deadline',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 229},
-                                                     {'col_letter': 'BE',
-                                                      'col_index': 57,
-                                                      'header': 'Срок от клиента',
-                                                      'target_field': 'HistoryRecord(second_contact).raw_client_date',
-                                                      'transform': 'Сохраняется в raw_client_date (19 записей) и в '
-                                                                   'raw_deadline',
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 19},
-                                                     {'col_letter': 'BF',
-                                                      'col_index': 58,
-                                                      'header': 'Инфа по документам от клиента',
-                                                      'target_field': 'HistoryRecord(incident_or_expert_request).raw_deadline '
-                                                                      '/ text',
-                                                      'transform': 'Сохраняется в истории инцидентов/экспертных '
-                                                                   "запросов (source_column='BF-BH')",
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 1},
-                                                     {'col_letter': 'BG',
-                                                      'col_index': 59,
-                                                      'header': '№ Инцидента по отсрочке',
-                                                      'target_field': 'HistoryRecord(incident_or_expert_request).text',
-                                                      'transform': 'Сохраняется в истории инцидентов/экспертных '
-                                                                   "запросов (source_column='BF-BH')",
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 1},
-                                                     {'col_letter': 'BH',
-                                                      'col_index': 60,
-                                                      'header': 'Запрос эксперта',
-                                                      'target_field': 'HistoryRecord(incident_or_expert_request).raw_status '
-                                                                      '/ text',
-                                                      'transform': 'Сохраняется в истории инцидентов/экспертных '
-                                                                   "запросов (source_column='BF-BH')",
-                                                      'exclusion_reason': None,
-                                                      'header_row': 1,
-                                                      'nonempty_cells_below_header': 6}],
- 'База I кв 2026 Дубна.xlsx::Все КЦР': [{'col_letter': 'A',
-                                         'col_index': 1,
-                                         'header': 'Уникальны обезличинный идентификатор',
-                                         'target_field': 'source_client_id',
-                                         'transform': 'str.strip(); сверка с реестром клиентов',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 115},
-                                        {'col_letter': 'B',
-                                         'col_index': 2,
-                                         'header': 'Код КЦР',
-                                         'target_field': 'ClientRecord.kcr_code',
-                                         'transform': 'clean_optional_str (обогащение карточки клиента)',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 0},
-                                        {'col_letter': 'C',
-                                         'col_index': 3,
-                                         'header': None,
-                                         'target_field': None,
-                                         'transform': 'Сохранение исходного значения и координат в '
-                                                      'source_preserved_values.jsonl при наличии значения.',
-                                         'exclusion_reason': 'Нет непустых значений ниже заголовка в предоставленном '
-                                                             'файле.',
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 0},
-                                        {'col_letter': 'D',
-                                         'col_index': 4,
-                                         'header': 'Название',
-                                         'target_field': 'ClientRecord.organization_name',
-                                         'transform': 'clean_optional_str (обогащение карточки клиента)',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 0},
-                                        {'col_letter': 'E',
-                                         'col_index': 5,
-                                         'header': 'СЦ',
-                                         'target_field': 'ClientRecord.service_center',
-                                         'transform': 'clean_optional_str (обогащение карточки клиента)',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 0},
-                                        {'col_letter': 'F',
-                                         'col_index': 6,
-                                         'header': None,
-                                         'target_field': None,
-                                         'transform': 'Сохранение исходного значения и координат в '
-                                                      'source_preserved_values.jsonl при наличии значения.',
-                                         'exclusion_reason': 'Нет непустых значений ниже заголовка в предоставленном '
-                                                             'файле.',
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 0},
-                                        {'col_letter': 'G',
-                                         'col_index': 7,
-                                         'header': None,
-                                         'target_field': None,
-                                         'transform': 'Сохранение исходного значения и координат в '
-                                                      'source_preserved_values.jsonl при наличии значения.',
-                                         'exclusion_reason': 'Нет непустых значений ниже заголовка в предоставленном '
-                                                             'файле.',
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 0},
-                                        {'col_letter': 'H',
-                                         'col_index': 8,
-                                         'header': None,
-                                         'target_field': None,
-                                         'transform': 'Сохранение исходного значения и координат в '
-                                                      'source_preserved_values.jsonl при наличии значения.',
-                                         'exclusion_reason': 'Нет непустых значений ниже заголовка в предоставленном '
-                                                             'файле.',
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 0},
-                                        {'col_letter': 'I',
-                                         'col_index': 9,
-                                         'header': None,
-                                         'target_field': None,
-                                         'transform': 'Сохранение исходного значения и координат в '
-                                                      'source_preserved_values.jsonl при наличии значения.',
-                                         'exclusion_reason': 'Нет непустых значений ниже заголовка в предоставленном '
-                                                             'файле.',
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 0},
-                                        {'col_letter': 'J',
-                                         'col_index': 10,
-                                         'header': 'Время от Екб',
-                                         'target_field': 'ClientRecord.time_zone_offset',
-                                         'transform': 'clean_optional_str (обогащение 115 карточек клиентов с '
-                                                      'фиксацией attribute_provenance)',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 115},
-                                        {'col_letter': 'K',
-                                         'col_index': 11,
-                                         'header': 'ФИО главного админа',
-                                         'target_field': 'ClientRecord.admin_name',
-                                         'transform': 'clean_optional_str (ФИО главного администратора, отдельно от '
-                                                      'manager_name)',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 0},
-                                        {'col_letter': 'L',
-                                         'col_index': 12,
-                                         'header': 'Телефон админа',
-                                         'target_field': 'ClientRecord.admin_phone',
-                                         'transform': 'clean_optional_str (телефон администратора из выделенного '
-                                                      'столбца)',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 0},
-                                        {'col_letter': 'M',
-                                         'col_index': 13,
-                                         'header': 'Email админа',
-                                         'target_field': 'ClientRecord.admin_email',
-                                         'transform': 'clean_optional_str (email администратора из выделенного '
-                                                      'столбца)',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 0},
-                                        {'col_letter': 'N',
-                                         'col_index': 14,
-                                         'header': 'Спич',
-                                         'target_field': None,
-                                         'transform': 'Сохранение исходного значения и координат в '
-                                                      'source_preserved_values.jsonl при наличии значения.',
-                                         'exclusion_reason': 'Не включено в текущие '
-                                                             'ClientRecord/SliceRecord/HistoryRecord; сохранено без '
-                                                             'трактовки в source_preserved_values.jsonl. Нормализация '
-                                                             'требует согласования.',
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 115},
-                                        {'col_letter': 'O',
-                                         'col_index': 15,
-                                         'header': 'стаус на 21.05.26',
-                                         'target_field': 'HistoryRecord(historical_status).raw_status',
-                                         'transform': "occurred_at='2026-05-21', source_column='O' (115 записей)",
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 115},
-                                        {'col_letter': 'P',
-                                         'col_index': 16,
-                                         'header': 'ИНН',
-                                         'target_field': 'ClientRecord.inn',
-                                         'transform': 'clean_optional_str (обогащение карточки клиента)',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 0},
-                                        {'col_letter': 'Q',
-                                         'col_index': 17,
-                                         'header': 'КПП',
-                                         'target_field': 'ClientRecord.kpp',
-                                         'transform': 'clean_optional_str (обогащение карточки клиента)',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 0},
-                                        {'col_letter': 'R',
-                                         'col_index': 18,
-                                         'header': 'Действует ли КЦР',
-                                         'target_field': 'ClientRecord.is_active',
-                                         'transform': 'clean_optional_str (обогащение карточки клиента)',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 115},
-                                        {'col_letter': 'S',
-                                         'col_index': 19,
-                                         'header': 'Блокировка в сервисе',
-                                         'target_field': 'ClientRecord.is_blocked',
-                                         'transform': 'clean_optional_str (обогащение карточки клиента)',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 115},
-                                        {'col_letter': 'T',
-                                         'col_index': 20,
-                                         'header': 'ФИО менеджера',
-                                         'target_field': 'ClientRecord.manager_name',
-                                         'transform': 'clean_optional_str (сохраняется строго в manager_name)',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 0},
-                                        {'col_letter': 'U',
-                                         'col_index': 21,
-                                         'header': 'ФИО менеджера из КП',
-                                         'target_field': 'ClientRecord.manager_name',
-                                         'transform': 'Резервное поле manager_name, если T пусто',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 0},
-                                        {'col_letter': 'V',
-                                         'col_index': 22,
-                                         'header': 'Всего документов весь 2025',
-                                         'target_field': 'SliceRecord.total',
-                                         'transform': 'parse_strict_int; период 2025-01-01..2025-12-31, срез '
-                                                      '2026-05-21',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 115},
-                                        {'col_letter': 'W',
-                                         'col_index': 23,
-                                         'header': 'Долг весь 2025 на 21.05.26',
-                                         'target_field': 'SliceRecord.unsent',
-                                         'transform': 'parse_strict_int; период 2025-01-01..2025-12-31, срез '
-                                                      '2026-05-21',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 115},
-                                        {'col_letter': 'X',
-                                         'col_index': 24,
-                                         'header': '% Долга весь 2025 на 21.05.26',
-                                         'target_field': 'SliceRecord.raw_percentage',
-                                         'transform': 'parse_strict_float; срез 2026-05-21',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 115},
-                                        {'col_letter': 'Y',
-                                         'col_index': 25,
-                                         'header': 'Всего документов 2-4 кв 2025',
-                                         'target_field': 'SliceRecord.total',
-                                         'transform': 'parse_strict_int; период 2025-04-01..2025-12-31, срез '
-                                                      '2026-05-21',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 114},
-                                        {'col_letter': 'Z',
-                                         'col_index': 26,
-                                         'header': 'Долг2-4 кв 2025 на 21.05.26',
-                                         'target_field': 'SliceRecord.unsent',
-                                         'transform': 'parse_strict_int; период 2025-04-01..2025-12-31, срез '
-                                                      '2026-05-21',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 114},
-                                        {'col_letter': 'AA',
-                                         'col_index': 27,
-                                         'header': '% Долга 2-4кв 2025 на 21.05.26',
-                                         'target_field': 'SliceRecord.raw_percentage',
-                                         'transform': 'parse_strict_float; срез 2026-05-21',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 114},
-                                        {'col_letter': 'AB',
-                                         'col_index': 28,
-                                         'header': 'Всего документов 1 кв 2026',
-                                         'target_field': 'SliceRecord.total',
-                                         'transform': 'parse_strict_int; период 2026-01-01..2026-03-31, срез '
-                                                      '2026-05-21',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 107},
-                                        {'col_letter': 'AC',
-                                         'col_index': 29,
-                                         'header': 'Долг 1 кв 2026 на 21.05.26',
-                                         'target_field': 'SliceRecord.unsent',
-                                         'transform': 'parse_strict_int; период 2026-01-01..2026-03-31, срез '
-                                                      '2026-05-21',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 107},
-                                        {'col_letter': 'AD',
-                                         'col_index': 30,
-                                         'header': '% Долга 1 кв 2026 на 21.05.26',
-                                         'target_field': 'SliceRecord.raw_percentage',
-                                         'transform': 'parse_strict_float; срез 2026-05-21',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 107},
-                                        {'col_letter': 'AE',
-                                         'col_index': 31,
-                                         'header': 'Всего документов 2 кв 2025-1 кв 2026 на 21.05.26',
-                                         'target_field': 'SliceRecord.total',
-                                         'transform': 'parse_strict_int; период 2025-04-01..2026-03-31, срез '
-                                                      '2026-05-21',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 115},
-                                        {'col_letter': 'AF',
-                                         'col_index': 32,
-                                         'header': 'Долг 2 кв 2025-1 кв 2026 на 21.05.26',
-                                         'target_field': 'SliceRecord.unsent',
-                                         'transform': 'parse_strict_int; период 2025-04-01..2026-03-31, срез '
-                                                      '2026-05-21',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 115},
-                                        {'col_letter': 'AG',
-                                         'col_index': 33,
-                                         'header': '% Долга 2 кв 2025-1 кв 2026 на 21.05.26',
-                                         'target_field': 'SliceRecord.raw_percentage',
-                                         'transform': 'parse_strict_float; срез 2026-05-21',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 113},
-                                        {'col_letter': 'AH',
-                                         'col_index': 34,
-                                         'header': 'Ответственный ООВС',
-                                         'target_field': None,
-                                         'transform': 'Сохранение исходного значения и координат в '
-                                                      'source_preserved_values.jsonl при наличии значения.',
-                                         'exclusion_reason': 'Нет непустых значений ниже заголовка в предоставленном '
-                                                             'файле.',
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 0},
-                                        {'col_letter': 'AI',
-                                         'col_index': 35,
-                                         'header': 'Комментарии ООВС',
-                                         'target_field': 'HistoryRecord(operator_contact).text',
-                                         'transform': 'Дословный комментарий оператора I кв. 2026 (115 записей, '
-                                                      "source_column='AI-AM')",
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 115},
-                                        {'col_letter': 'AJ',
-                                         'col_index': 36,
-                                         'header': 'Статус звонка',
-                                         'target_field': 'HistoryRecord(operator_contact).raw_status',
-                                         'transform': 'Дословный статус звонка I кв. 2026 (115 записей, '
-                                                      "source_column='AI-AM')",
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 115},
-                                        {'col_letter': 'AK',
-                                         'col_index': 37,
-                                         'header': 'Дата перезвона',
-                                         'target_field': 'HistoryRecord(operator_contact).next_contact_date / '
-                                                         'raw_next_contact',
-                                         'transform': 'parse_iso_date + сохранение некалендарного текста и '
-                                                      'NON_DATE_NEXT_CONTACT',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 0},
-                                        {'col_letter': 'AL',
-                                         'col_index': 38,
-                                         'header': 'Срок отправки от клиента',
-                                         'target_field': 'HistoryRecord(operator_contact).raw_send_deadline',
-                                         'transform': 'Сохраняется в raw_send_deadline (93 записи) и в raw_deadline',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 93},
-                                        {'col_letter': 'AM',
-                                         'col_index': 39,
-                                         'header': 'Дата от клиента',
-                                         'target_field': 'HistoryRecord(operator_contact).raw_client_date',
-                                         'transform': 'Сохраняется в raw_client_date и в raw_deadline',
-                                         'exclusion_reason': None,
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 0},
-                                        {'col_letter': 'AN',
-                                         'col_index': 40,
-                                         'header': '№ Инцидента по отсрочке',
-                                         'target_field': None,
-                                         'transform': 'Сохранение исходного значения и координат в '
-                                                      'source_preserved_values.jsonl при наличии значения.',
-                                         'exclusion_reason': 'Нет непустых значений ниже заголовка в предоставленном '
-                                                             'файле.',
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 0},
-                                        {'col_letter': 'AO',
-                                         'col_index': 41,
-                                         'header': 'Запрос эксперта',
-                                         'target_field': None,
-                                         'transform': 'Сохранение исходного значения и координат в '
-                                                      'source_preserved_values.jsonl при наличии значения.',
-                                         'exclusion_reason': 'Нет непустых значений ниже заголовка в предоставленном '
-                                                             'файле.',
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 0},
-                                        {'col_letter': 'AP',
-                                         'col_index': 42,
-                                         'header': None,
-                                         'target_field': None,
-                                         'transform': 'Сохранение исходного значения и координат в '
-                                                      'source_preserved_values.jsonl при наличии значения.',
-                                         'exclusion_reason': 'Нет непустых значений ниже заголовка в предоставленном '
-                                                             'файле.',
-                                         'header_row': 2,
-                                         'nonempty_cells_below_header': 0}]}
+COLUMN_MAPPING: Dict[str, List[Dict[str, Any]]] = json.loads(
+    Path(__file__).with_name("column_mapping.json").read_text(encoding="utf-8")
+)
 
 
 # =====================================================================
@@ -2062,6 +344,63 @@ def set_client_attr(
         )
 
 
+def set_client_creation_date(
+    client: ClientRecord, raw: Any, filename: str, sheetname: str,
+    row: int, column: str, issues: List[QualityIssue]
+) -> None:
+    """Сохраняет исходное значение отдельно от календарной даты."""
+    if clean_optional_str(raw) is None:
+        return
+    raw_text = raw if isinstance(raw, str) else clean_optional_str(raw)
+    set_client_attr(client, "raw_creation_date", raw_text, filename, sheetname, row, column)
+    parsed = parse_iso_date(raw)
+    if parsed is not None:
+        set_client_attr(client, "creation_date", parsed, filename, sheetname, row, column)
+    else:
+        issues.append(QualityIssue(
+            code="INVALID_CREATION_DATE", file=filename, sheet=sheetname,
+            row=row, col=column, raw_value=raw_text,
+            description="Дата создания не распознана как календарная дата; исходный текст сохранён в raw_creation_date",
+            action="requires_review"
+        ))
+
+
+BASE_CLIENT_COLUMNS = {
+    "kcr_code": (2,), "organization_name": (3,), "service_center": (4,),
+    "inn": (8,), "kpp": (9,), "is_active": (10,), "is_blocked": (11,),
+    "manager_name": (12, 13),
+}
+DEBT_CLIENT_COLUMNS = {
+    "kcr_code": (2,), "service_center": (3,), "creation_date": (4,),
+    "time_zone_offset": (5,), "admin_name": (6,), "admin_phone": (7,), "admin_email": (8,),
+}
+Q1_CLIENT_COLUMNS = {
+    "kcr_code": (2,), "organization_name": (4,), "service_center": (5,),
+    "time_zone_offset": (10,), "admin_name": (11,), "admin_phone": (12,), "admin_email": (13,),
+    "inn": (16,), "kpp": (17,), "is_active": (18,), "is_blocked": (19,),
+    "manager_name": (20, 21),
+}
+
+
+def enrich_client_from_columns(
+    client: ClientRecord, ws: openpyxl.worksheet.worksheet.Worksheet, row: int,
+    filename: str, columns: Dict[str, Tuple[int, ...]], issues: List[QualityIssue]
+) -> None:
+    """Применяет явную карту атрибутов; первый непустой столбец имеет приоритет."""
+    for attr, candidates in columns.items():
+        for col in candidates:
+            raw = ws.cell(row, col).value
+            value = clean_optional_str(raw)
+            if value is None:
+                continue
+            letter = openpyxl.utils.get_column_letter(col)
+            if attr == "creation_date":
+                set_client_creation_date(client, raw, filename, ws.title, row, letter, issues)
+            else:
+                set_client_attr(client, attr, value, filename, ws.title, row, letter)
+            break
+
+
 def parse_slice_cell_triplet(
     ws: openpyxl.worksheet.worksheet.Worksheet,
     r: int,
@@ -2230,19 +569,7 @@ class BaseRegistryParser:
                         admin_name=None,
                         provenance=Provenance(source_file=filename, source_sheet="Все КЦР", source_row=r)
                     )
-                    set_client_attr(c_rec, "kcr_code", clean_optional_str(ws.cell(r, 2).value), filename, "Все КЦР", r, "B")
-                    set_client_attr(c_rec, "organization_name", clean_optional_str(ws.cell(r, 3).value), filename, "Все КЦР", r, "C")
-                    set_client_attr(c_rec, "service_center", clean_optional_str(ws.cell(r, 4).value), filename, "Все КЦР", r, "D")
-                    set_client_attr(c_rec, "inn", clean_optional_str(ws.cell(r, 8).value), filename, "Все КЦР", r, "H")
-                    set_client_attr(c_rec, "kpp", clean_optional_str(ws.cell(r, 9).value), filename, "Все КЦР", r, "I")
-                    set_client_attr(c_rec, "is_active", clean_optional_str(ws.cell(r, 10).value), filename, "Все КЦР", r, "J")
-                    set_client_attr(c_rec, "is_blocked", clean_optional_str(ws.cell(r, 11).value), filename, "Все КЦР", r, "K")
-                    mgr_l = clean_optional_str(ws.cell(r, 12).value)
-                    mgr_m = clean_optional_str(ws.cell(r, 13).value)
-                    if mgr_l:
-                        set_client_attr(c_rec, "manager_name", mgr_l, filename, "Все КЦР", r, "L")
-                    elif mgr_m:
-                        set_client_attr(c_rec, "manager_name", mgr_m, filename, "Все КЦР", r, "M")
+                    enrich_client_from_columns(c_rec, ws, r, filename, BASE_CLIENT_COLUMNS, issues)
                     clients[cid] = c_rec
 
                 stat_f = clean_optional_str(ws.cell(r, 6).value)
@@ -2356,16 +683,10 @@ class PeriodicSliceParser:
                         base_rejection = "UNKNOWN_CLIENT_ID"
                     elif clients_dict is not None and cid in clients_dict:
                         c_rec = clients_dict[cid]
-                        val_b = clean_optional_str(ws.cell(r, 2).value)
-                        val_c = clean_optional_str(ws.cell(r, 3).value)
-                        if "сц" in col2_h and "кцр" not in col2_h:
-                            set_client_attr(c_rec, "service_center", val_b, filename, sname, r, "B")
-                        else:
-                            set_client_attr(c_rec, "kcr_code", val_b, filename, sname, r, "B")
-                        if "сц" in col3_h:
-                            set_client_attr(c_rec, "service_center", val_c, filename, sname, r, "C")
-                        else:
-                            set_client_attr(c_rec, "organization_name", val_c, filename, sname, r, "C")
+                        code_attr = "service_center_code" if "сц" in col2_h and "кцр" not in col2_h else "kcr_code"
+                        name_attr = "service_center" if "сц" in col3_h else "organization_name"
+                        enrich_client_from_columns(c_rec, ws, r, filename,
+                                                   {code_attr: (2,), name_attr: (3,)}, issues)
 
                     rec = parse_slice_cell_triplet(
                         ws, r, 4, 5, None, cid, p_start, p_end, "2026-10-20",
@@ -2482,14 +803,7 @@ class HistoricalFilesParser:
                     ))
                 elif clients_dict is not None and cid in clients_dict:
                     c_rec = clients_dict[cid]
-                    set_client_attr(c_rec, "kcr_code", clean_optional_str(ws.cell(r, 2).value), filename, "1-3 кв 25", r, "B")
-                    set_client_attr(c_rec, "service_center", clean_optional_str(ws.cell(r, 3).value), filename, "1-3 кв 25", r, "C")
-                    cdate_d = parse_iso_date(ws.cell(r, 4).value) or clean_optional_str(ws.cell(r, 4).value)
-                    set_client_attr(c_rec, "creation_date", cdate_d, filename, "1-3 кв 25", r, "D")
-                    set_client_attr(c_rec, "time_zone_offset", clean_optional_str(ws.cell(r, 5).value), filename, "1-3 кв 25", r, "E")
-                    set_client_attr(c_rec, "admin_name", clean_optional_str(ws.cell(r, 6).value), filename, "1-3 кв 25", r, "F")
-                    set_client_attr(c_rec, "admin_phone", clean_optional_str(ws.cell(r, 7).value), filename, "1-3 кв 25", r, "G")
-                    set_client_attr(c_rec, "admin_email", clean_optional_str(ws.cell(r, 8).value), filename, "1-3 кв 25", r, "H")
+                    enrich_client_from_columns(c_rec, ws, r, filename, DEBT_CLIENT_COLUMNS, issues)
 
                 for c_tot, c_uns, c_pct, as_of, is_ambig in hist_slice_specs:
                     base_rej = "UNKNOWN_CLIENT_ID" if is_unknown else (
@@ -2665,23 +979,7 @@ class HistoricalFilesParser:
                     ))
                 elif clients_dict is not None and cid in clients_dict:
                     c_rec = clients_dict[cid]
-                    set_client_attr(c_rec, "kcr_code", clean_optional_str(ws.cell(r, 2).value), filename, "Все КЦР", r, "B")
-                    set_client_attr(c_rec, "organization_name", clean_optional_str(ws.cell(r, 4).value), filename, "Все КЦР", r, "D")
-                    set_client_attr(c_rec, "service_center", clean_optional_str(ws.cell(r, 5).value), filename, "Все КЦР", r, "E")
-                    set_client_attr(c_rec, "time_zone_offset", clean_optional_str(ws.cell(r, 10).value), filename, "Все КЦР", r, "J")
-                    set_client_attr(c_rec, "admin_name", clean_optional_str(ws.cell(r, 11).value), filename, "Все КЦР", r, "K")
-                    set_client_attr(c_rec, "admin_phone", clean_optional_str(ws.cell(r, 12).value), filename, "Все КЦР", r, "L")
-                    set_client_attr(c_rec, "admin_email", clean_optional_str(ws.cell(r, 13).value), filename, "Все КЦР", r, "M")
-                    set_client_attr(c_rec, "inn", clean_optional_str(ws.cell(r, 16).value), filename, "Все КЦР", r, "P")
-                    set_client_attr(c_rec, "kpp", clean_optional_str(ws.cell(r, 17).value), filename, "Все КЦР", r, "Q")
-                    set_client_attr(c_rec, "is_active", clean_optional_str(ws.cell(r, 18).value), filename, "Все КЦР", r, "R")
-                    set_client_attr(c_rec, "is_blocked", clean_optional_str(ws.cell(r, 19).value), filename, "Все КЦР", r, "S")
-                    mgr_t = clean_optional_str(ws.cell(r, 20).value)
-                    mgr_u = clean_optional_str(ws.cell(r, 21).value)
-                    if mgr_t:
-                        set_client_attr(c_rec, "manager_name", mgr_t, filename, "Все КЦР", r, "T")
-                    elif mgr_u:
-                        set_client_attr(c_rec, "manager_name", mgr_u, filename, "Все КЦР", r, "U")
+                    enrich_client_from_columns(c_rec, ws, r, filename, Q1_CLIENT_COLUMNS, issues)
 
                 for c_tot, c_uns, c_pct, p_start, p_end in q1_slice_specs:
                     base_rej = "UNKNOWN_CLIENT_ID" if is_unknown else None
@@ -2742,12 +1040,7 @@ class HistoricalFilesParser:
 
 class QualityAuditor:
     @staticmethod
-    def audit_and_filter_slices(slices: List[SliceRecord]) -> Tuple[List[SliceRecord], List[SliceRecord], List[QualityIssue]]:
-        valid_by_key: Dict[Tuple[str, str, str, str], SliceRecord] = {}
-        conflicted_keys: Set[Tuple[str, str, str, str]] = set()
-        rejected: List[SliceRecord] = []
-        issues: List[QualityIssue] = []
-
+    def _collect_reference_totals(slices: List[SliceRecord]) -> Dict[Tuple[str, str, str], Set[Tuple[str, int]]]:
         # Предварительные опоры: только корректные записи с total, без конфликтов
         # одного ключа. После общего аудита опоры проверяются повторно.
         known_period_totals: Dict[Tuple[str, str, str], Set[Tuple[str, int]]] = {}
@@ -2769,28 +1062,54 @@ class QualityAuditor:
         for key, group in reference_groups.items():
             if len({(s.total, s.unsent) for s in group}) == 1:
                 known_period_totals.setdefault(key[:3], set()).add((key[3], group[0].total))
+        return known_period_totals
 
-        def validate_missing_total(s: SliceRecord, references) -> None:
-            """Проверяет повторное наблюдение, сохраняя исходный total=None."""
+    @staticmethod
+    def _validate_missing_total(s: SliceRecord, references, issues: List[QualityIssue]) -> Optional[int]:
+        """Проверяет повторное наблюдение, сохраняя исходный total=None."""
+        p = s.provenance
+        pk = (s.source_client_id, s.period_start, s.period_end)
+        other_date_totals = {tot for dt, tot in references.get(pk, set()) if dt != s.as_of_date}
+        if len(other_date_totals) != 1:
+            code = "UNSENT_WITHOUT_TOTAL"
+            raw_value = f"total=null, unsent={s.unsent}"
+            description = "Нет однозначного общего количества из принятых наблюдений периода на другую дату"
+        elif s.unsent > next(iter(other_date_totals)):
+            code = "UNSENT_EXCEEDS_TOTAL"
+            raw_value = f"unsent={s.unsent}, period_total={next(iter(other_date_totals))}"
+            description = "Остаток повторного среза без total превышает известное общее количество документов периода"
+        else:
+            return next(iter(other_date_totals))
+        issues.append(QualityIssue(
+            code=code, file=p.source_file, sheet=p.source_sheet, row=p.source_row,
+            col=p.source_column or "total", raw_value=raw_value,
+            description=description, action="requires_review"
+        ))
+        s.rejection_reason = code
+
+    @staticmethod
+    def _check_percentage(s: SliceRecord, total: Optional[int], issues: List[QualityIssue]) -> None:
+        if (total is None or total <= 0 or s.unsent is None
+                or s.raw_percentage is None or not math.isfinite(s.raw_percentage)):
+            return
+        calculated = s.unsent / total
+        if abs(s.raw_percentage - calculated) > 0.02:
             p = s.provenance
-            pk = (s.source_client_id, s.period_start, s.period_end)
-            other_date_totals = {tot for dt, tot in references.get(pk, set()) if dt != s.as_of_date}
-            if len(other_date_totals) != 1:
-                code = "UNSENT_WITHOUT_TOTAL"
-                raw_value = f"total=null, unsent={s.unsent}"
-                description = "Нет однозначного общего количества из принятых наблюдений периода на другую дату"
-            elif s.unsent > next(iter(other_date_totals)):
-                code = "UNSENT_EXCEEDS_TOTAL"
-                raw_value = f"unsent={s.unsent}, period_total={next(iter(other_date_totals))}"
-                description = "Остаток повторного среза без total превышает известное общее количество документов периода"
-            else:
-                return
             issues.append(QualityIssue(
-                code=code, file=p.source_file, sheet=p.source_sheet, row=p.source_row,
-                col=p.source_column or "total", raw_value=raw_value,
-                description=description, action="requires_review"
+                code="PERCENTAGE_MISMATCH", file=p.source_file, sheet=p.source_sheet, row=p.source_row,
+                col=p.source_column or "percentage", raw_value=f"excel={s.raw_percentage:.4f}, calc={calculated:.4f}",
+                description="Исходный процент расходится с вычисленным unsent/total более чем на 0.02",
+                action="requires_review"
             ))
-            s.rejection_reason = code
+
+    @staticmethod
+    def audit_and_filter_slices(slices: List[SliceRecord]) -> Tuple[List[SliceRecord], List[SliceRecord], List[QualityIssue]]:
+        valid_by_key: Dict[Tuple[str, str, str, str], SliceRecord] = {}
+        conflicted_keys: Set[Tuple[str, str, str, str]] = set()
+        rejected: List[SliceRecord] = []
+        issues: List[QualityIssue] = []
+
+        known_period_totals = QualityAuditor._collect_reference_totals(slices)
 
         for s in slices:
             p = s.provenance
@@ -2844,7 +1163,7 @@ class QualityAuditor:
                 s.rejection_reason = s.rejection_reason or "NEGATIVE_UNSENT"
 
             if s.total is None and s.unsent is not None and not s.rejection_reason:
-                validate_missing_total(s, known_period_totals)
+                QualityAuditor._validate_missing_total(s, known_period_totals, issues)
 
             if s.total is not None and s.unsent is not None and s.unsent > s.total and not s.rejection_reason:
                 issues.append(QualityIssue(
@@ -2855,15 +1174,7 @@ class QualityAuditor:
                 ))
                 s.rejection_reason = "UNSENT_EXCEEDS_TOTAL"
 
-            if s.raw_percentage is not None and math.isfinite(s.raw_percentage) and s.total and s.unsent is not None and s.total > 0:
-                calc_pct = s.unsent / s.total
-                if abs(s.raw_percentage - calc_pct) > 0.02:
-                    issues.append(QualityIssue(
-                        code="PERCENTAGE_MISMATCH", file=p.source_file, sheet=p.source_sheet, row=p.source_row,
-                        col=p.source_column or "percentage", raw_value=f"excel={s.raw_percentage:.4f}, calc={calc_pct:.4f}",
-                        description="Исходный процент расходится с вычисленным unsent/total более чем на 0.02",
-                        action="requires_review"
-                    ))
+            QualityAuditor._check_percentage(s, s.total, issues)
 
             if s.rejection_reason:
                 rejected.append(s)
@@ -2916,10 +1227,12 @@ class QualityAuditor:
                 accepted_period_totals.setdefault(key[:3], set()).add((s.as_of_date, s.total))
         for key, s in list(valid_by_key.items()):
             if s.total is None and s.unsent is not None:
-                validate_missing_total(s, accepted_period_totals)
+                reference_total = QualityAuditor._validate_missing_total(s, accepted_period_totals, issues)
                 if s.rejection_reason:
                     valid_by_key.pop(key)
                     rejected.append(s)
+                else:
+                    QualityAuditor._check_percentage(s, reference_total, issues)
 
         return list(valid_by_key.values()), rejected, issues
 

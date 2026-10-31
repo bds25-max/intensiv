@@ -197,7 +197,12 @@ def run():
             for attr, p in client["attribute_provenance"].items():
                 ws = books[p["source_file"]][p["source_sheet"]]
                 raw = ws[p["source_column"] + str(p["source_row"])].value
-                expected = core.parse_iso_date(raw) or text(raw) if attr == "creation_date" else text(raw)
+                if attr == "creation_date":
+                    expected = core.parse_iso_date(raw)
+                elif attr == "raw_creation_date":
+                    expected = raw if isinstance(raw, str) else text(raw)
+                else:
+                    expected = text(raw)
                 check(client[attr] == expected, "Атрибут не совпадает с происхождением: " + attr)
         for record in valid + rejected:
             p = record["provenance"]

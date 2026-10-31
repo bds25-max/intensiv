@@ -10,6 +10,8 @@
 
 Колонки, не перенесённые в основные схемы, перечислены явно. Их непустые исходные значения, а также исходные ячейки истории сохранены в source_preserved_values.jsonl. Это набор исходных ячеек с координатами; он не назначает неизвестным полям смысл события и не заменяет согласование схемы. Сохранены формулы и их доступные кешированные значения. Основные текстовые поля используют прежнее удаление внешних пробелов; дополнительный набор сохраняет исходные строки с пробелами.
 
+Карта данных загружается из column_mapping.json. В v9 код СЦ выделен в service_center_code; service_center означает название. Дата создания проходит календарную проверку; исходное представление хранится в raw_creation_date. Процент повтора с total=null проверяется по окончательно принятой опоре, если её количество больше нуля.
+
 ## КЦР_последняя выгрузка_Дубна.xlsx — Все КЦР
 
 Строка заголовков: 2. Колонок: 66.
@@ -102,7 +104,7 @@
 | Колонка | Заголовок Excel | Непустых ячеек | Основное поле | Преобразование | Причина исключения |
 | --- | --- | ---: | --- | --- | --- |
 | A | Уникальны обезличинный идентификатор | 2928 | SliceRecord.source_client_id | Сопоставление с белым списком; неизвестные -> UNKNOWN_CLIENT_ID (blocked) | — |
-| B | код СЦ | 0 | ClientRecord.service_center | clean_optional_str (обогащение карточки клиента при наличии) | — |
+| B | код СЦ | 0 | ClientRecord.service_center_code | clean_optional_str; код СЦ отдельно от названия service_center; происхождение B | — |
 | C | название СЦ | 0 | ClientRecord.service_center | clean_optional_str (обогащение карточки клиента при наличии) | — |
 | D | документов всего | 2928 | SliceRecord.total | parse_strict_int; период 2026-01-01..2026-03-31, срез 2026-10-20 | — |
 | E | Всего не отправлено документов | 2928 | SliceRecord.unsent | parse_strict_int; период 2026-01-01..2026-03-31, срез 2026-10-20 | — |
@@ -114,7 +116,7 @@
 | Колонка | Заголовок Excel | Непустых ячеек | Основное поле | Преобразование | Причина исключения |
 | --- | --- | ---: | --- | --- | --- |
 | A | Уникальны обезличинный идентификатор | 3021 | SliceRecord.source_client_id | Сопоставление с белым списком; неизвестные -> UNKNOWN_CLIENT_ID (blocked) | — |
-| B | код СЦ | 0 | ClientRecord.service_center | clean_optional_str (обогащение карточки клиента при наличии) | — |
+| B | код СЦ | 0 | ClientRecord.service_center_code | clean_optional_str; код СЦ отдельно от названия service_center; происхождение B | — |
 | C | название СЦ | 0 | ClientRecord.service_center | clean_optional_str (обогащение карточки клиента при наличии) | — |
 | D | документов всего | 3021 | SliceRecord.total | parse_strict_int; период 2026-04-01..2026-06-30, срез 2026-10-20 | — |
 | E | Всего не отправлено документов | 3021 | SliceRecord.unsent | parse_strict_int; период 2026-04-01..2026-06-30, срез 2026-10-20 | — |
@@ -126,7 +128,7 @@
 | Колонка | Заголовок Excel | Непустых ячеек | Основное поле | Преобразование | Причина исключения |
 | --- | --- | ---: | --- | --- | --- |
 | A | Уникальны обезличинный идентификатор | 3404 | SliceRecord.source_client_id | Сопоставление с белым списком; неизвестные -> UNKNOWN_CLIENT_ID (blocked) | — |
-| B | код СЦ | 0 | ClientRecord.service_center | clean_optional_str (обогащение карточки клиента при наличии) | — |
+| B | код СЦ | 0 | ClientRecord.service_center_code | clean_optional_str; код СЦ отдельно от названия service_center; происхождение B | — |
 | C | название СЦ | 0 | ClientRecord.service_center | clean_optional_str (обогащение карточки клиента при наличии) | — |
 | D | документов всего | 3404 | SliceRecord.total | parse_strict_int; период 2026-07-01..2026-09-30, срез 2026-10-20 | — |
 | E | Всего не отправлено документов | 3404 | SliceRecord.unsent | parse_strict_int; период 2026-07-01..2026-09-30, срез 2026-10-20 | — |
@@ -140,7 +142,7 @@
 | A | Уникальны обезличинный идентификатор | 295 | source_client_id | str.strip(); сверка с реестром клиентов | — |
 | B | Код КЦР | 0 | ClientRecord.kcr_code | clean_optional_str (обогащение карточки клиента) | — |
 | C | название СЦ | 0 | ClientRecord.service_center | clean_optional_str (обогащение карточки клиента) | — |
-| D | Дата создания КЦР | 0 | ClientRecord.creation_date | parse_iso_date (обогащение карточки клиента) | — |
+| D | Дата создания КЦР | 0 | ClientRecord.creation_date / ClientRecord.raw_creation_date | parse_iso_date: календарная дата YYYY-MM-DD или null; исходное значение отдельно; INVALID_CREATION_DATE при ошибке | — |
 | E | Время от Екб | 0 | ClientRecord.time_zone_offset | clean_optional_str (обогащение карточки клиента) | — |
 | F | ФИО главного админа | 0 | ClientRecord.admin_name | clean_optional_str (истинное ФИО главного администратора) | — |
 | G | Телефон админа | 0 | ClientRecord.admin_phone | clean_optional_str (телефон администратора из выделенной колонки) | — |

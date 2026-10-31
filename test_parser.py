@@ -585,6 +585,101 @@ class TestKCRParserSuite(unittest.TestCase):
         self.assertEqual(len(valid), 2)
         self.assertEqual(next(s for s in rejected if s.total is None).rejection_reason, "UNSENT_WITHOUT_TOTAL")
 
+    def test_20_creation_date_is_calendar_date_or_null(self):
+        for raw, expected in [("начало 2026 года", None), ("31.02.2026", None),
+                              ("31.01.2026", "2026-01-31"), (None, None)]:
+            with self.subTest(raw=raw), tempfile.TemporaryDirectory() as temp:
+                path = os.path.join(temp, "creation_date.xlsx")
+                wb = openpyxl.Workbook()
+                ws = wb.active
+                ws.title = "1-3 кв 25"
+                headers = {1: "идентификатор", 10: "претензии", 19: "документов всего за 2025 год",
+                           20: "долг 27.03.26", 27: "долг 05.12.25", 31: "долг 05.11.25",
+                           33: "долг 31.10.25", 35: "долг 20.10.25", 46: "комментарии оовс",
+                           47: "статус звонка", 53: "повторному звонку", 54: "статус звонка в январе"}
+                for col, dt, _ in HistoricalFilesParser.STATUS_COLUMNS_SPEC:
+                    headers[col] = "статус " + dt
+                for col, value in headers.items():
+                    ws.cell(1, col, value)
+                ws.cell(2, 1, "DATE_TEST")
+                ws.cell(2, 4, raw)
+                wb.save(path)
+                wb.close()
+                client = ClientRecord("DATE_TEST", None, None, None, None, Provenance("f", "s", 1))
+                _, _, issues = HistoricalFilesParser.parse_debts_2025(
+                    path, {"DATE_TEST"}, {"DATE_TEST": client})
+                self.assertEqual(client.creation_date, expected)
+                self.assertEqual(client.raw_creation_date, raw)
+                errors = [q for q in issues if q.code == "INVALID_CREATION_DATE"]
+                self.assertEqual(len(errors), int(raw is not None and expected is None))
+                if raw is not None:
+                    self.assertEqual(client.attribute_provenance["raw_creation_date"].source_column, "D")
+                if errors:
+                    self.assertEqual((errors[0].row, errors[0].col, errors[0].raw_value), (2, "D", raw))
+
+    def test_21_service_center_code_and_name_are_both_preserved(self):
+        for code, name in [("SC-42", "СЦ Восток"), ("SC-42", None), (None, "СЦ Восток")]:
+            with self.subTest(code=code, name=name), tempfile.TemporaryDirectory() as temp:
+                path = os.path.join(temp, "service_center.xlsx")
+                wb = openpyxl.Workbook()
+                ws = wb.active
+                ws.title = "1 кв 2026"
+                for col, value in enumerate(["идентификатор", "код СЦ", "название СЦ",
+                                              "документов всего", "не отправлено"], 1):
+                    ws.cell(1, col, value)
+                ws.append(["SC_TEST", code, name, 10, 2])
+                wb.save(path)
+                wb.close()
+                client = ClientRecord("SC_TEST", None, None, None, None, Provenance("f", "s", 1))
+                PeriodicSliceParser.parse(path, {"SC_TEST"}, clients_dict={"SC_TEST": client})
+                self.assertEqual(client.service_center_code, code)
+                self.assertEqual(client.service_center, name)
+                self.assertIsNone(client.kcr_code)
+                if code:
+                    self.assertEqual(client.attribute_provenance["service_center_code"].source_column, "B")
+                if name:
+                    self.assertEqual(client.attribute_provenance["service_center"].source_column, "C")
+
+    def test_22_repeated_percentage_is_checked_against_accepted_reference(self):
+        primary = self._reference_slice("2026-05-21", 10, 5, 0.5)
+        repeated = self._reference_slice("2026-10-20", None, 2, 0.9)
+        for order in itertools.permutations([primary, repeated]):
+            valid, rejected, issues = QualityAuditor.audit_and_filter_slices(copy.deepcopy(order))
+            self.assertEqual(len(valid), 2)
+            self.assertEqual(rejected, [])
+            self.assertIsNone(next(s for s in valid if s.as_of_date == "2026-10-20").total)
+            mismatches = [q for q in issues if q.code == "PERCENTAGE_MISMATCH"]
+            self.assertEqual(len(mismatches), 1)
+            self.assertEqual(mismatches[0].raw_value, "excel=0.9000, calc=0.2000")
+
+    def test_23_repeated_percentage_correct_missing_and_zero_total(self):
+        for total, unsent, percentage in [(10, 2, 0.2), (10, 2, None), (0, 0, 0.9)]:
+            records = [self._reference_slice("2026-05-21", total, 0),
+                       self._reference_slice("2026-10-20", None, unsent, percentage)]
+            valid, rejected, issues = QualityAuditor.audit_and_filter_slices(records)
+            self.assertEqual(len(valid), 2)
+            self.assertEqual(rejected, [])
+            self.assertFalse(any(q.code == "PERCENTAGE_MISMATCH" for q in issues))
+
+    def test_24_rejected_references_do_not_trigger_percentage_comparison(self):
+        records = [self._reference_slice("2026-05-21", 10, 2),
+                   self._reference_slice("2026-05-21", 10, 3),
+                   self._reference_slice("2026-10-20", None, 2, 0.9)]
+        valid, rejected, issues = QualityAuditor.audit_and_filter_slices(records)
+        self.assertEqual(valid, [])
+        self.assertEqual(len(rejected), 3)
+        self.assertFalse(any(q.code == "PERCENTAGE_MISMATCH" for q in issues))
+
+    def test_25_repeated_percentage_uses_final_surviving_reference(self):
+        records = [self._reference_slice("2026-05-21", 10, 5),
+                   self._reference_slice("2026-07-21", 10, 4),
+                   self._reference_slice("2026-05-21", None, 1),
+                   self._reference_slice("2026-10-20", None, 2, 0.9)]
+        for order in itertools.permutations(records):
+            valid, _, issues = QualityAuditor.audit_and_filter_slices(copy.deepcopy(order))
+            self.assertEqual({s.as_of_date for s in valid}, {"2026-07-21", "2026-10-20"})
+            self.assertEqual(sum(q.code == "PERCENTAGE_MISMATCH" for q in issues), 1)
+
 
 if __name__ == "__main__":
     unittest.main()
