@@ -1,0 +1,39 @@
+{
+  "outputs": {
+    "normalized_clients.json": {
+      "same_before_after_refactor": true,
+      "same_as_v8": false,
+      "sha256": "b2cb0bc3def36ab003ff5e3fc306826662c6a7fe5b3e98622748a2ff7a5286d6"
+    },
+    "normalized_slices.jsonl": {
+      "same_before_after_refactor": true,
+      "same_as_v8": true,
+      "sha256": "608f70cbe57a98b1d975f9a04d9e0673716bca15faaafd5c728d681698a8c7de"
+    },
+    "rejected_slices.jsonl": {
+      "same_before_after_refactor": true,
+      "same_as_v8": true,
+      "sha256": "a3deddb14dbf25146931adf35a423bf524c6b5407669c2b5fe76d55d4dc4ab5b"
+    },
+    "normalized_history.jsonl": {
+      "same_before_after_refactor": true,
+      "same_as_v8": true,
+      "sha256": "348354649bb71a4f3bd24b9ba5e191a707e1effb13a3170ff010bfb6964d2303"
+    },
+    "quality_report.json": {
+      "same_before_after_refactor": true,
+      "same_as_v8": true,
+      "sha256": "24b3f82cc4460db74579333f9094e7fbcf375ea033f4a8e7980f69264816c4de"
+    },
+    "quality_report.csv": {
+      "same_before_after_refactor": true,
+      "same_as_v8": true,
+      "sha256": "4d1e7e8edc4c05e18415b8581c5bf02a17e1028d3294a70892b5e9bfac0a9e96"
+    }
+  },
+  "clients_equal_v8_after_removing_new_null_fields": true,
+  "source_line_counts": {
+    "v8": 3086,
+    "v9": 1399
+  }
+}
