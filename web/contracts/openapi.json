@@ -1,0 +1,578 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "KCR UI integration proposal — NOT agreed server contract",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/state": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/State"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Assignment conflict"
+          }
+        }
+      }
+    },
+    "/actions": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Reply"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Assignment conflict"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Action"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "login": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "operator"
+            ]
+          },
+          "blocked": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "login",
+          "role",
+          "blocked"
+        ]
+      },
+      "Snapshot": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "period": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "total": {
+            "type": "number"
+          },
+          "unsent": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "period",
+          "date",
+          "total",
+          "unsent"
+        ]
+      },
+      "Event": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "nullable": true
+          },
+          "recorded": {
+            "type": "string"
+          },
+          "author": {
+            "type": "string"
+          },
+          "cycle": {
+            "type": "number"
+          },
+          "rawDate": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "text",
+          "date",
+          "recorded",
+          "author",
+          "cycle",
+          "rawDate"
+        ]
+      },
+      "Claim": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "number": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "sanction": {
+            "type": "string"
+          },
+          "period": {
+            "type": "string"
+          },
+          "unsent": {
+            "type": "number"
+          },
+          "cycle": {
+            "type": "number"
+          },
+          "incident": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "number",
+          "date",
+          "reason",
+          "status",
+          "sanction",
+          "period",
+          "unsent",
+          "cycle",
+          "incident"
+        ]
+      },
+      "Client": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "inn": {
+            "type": "string",
+            "nullable": true
+          },
+          "category": {
+            "type": "string"
+          },
+          "stage": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string",
+            "nullable": true
+          },
+          "version": {
+            "type": "number"
+          },
+          "cycle": {
+            "type": "number"
+          },
+          "open": {
+            "type": "boolean"
+          },
+          "published": {
+            "type": "boolean"
+          },
+          "nextAction": {
+            "type": "string",
+            "nullable": true
+          },
+          "due": {
+            "type": "string",
+            "nullable": true
+          },
+          "promise": {
+            "type": "string",
+            "nullable": true
+          },
+          "snapshots": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Snapshot"
+            }
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Event"
+            }
+          },
+          "claims": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Claim"
+            }
+          },
+          "changed": {
+            "type": "boolean"
+          },
+          "missing": {
+            "type": "boolean"
+          },
+          "hint": {
+            "type": "string",
+            "nullable": true
+          },
+          "reason": {
+            "type": "string"
+          },
+          "dynamics": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "inn",
+          "category",
+          "stage",
+          "owner",
+          "version",
+          "cycle",
+          "open",
+          "published",
+          "nextAction",
+          "due",
+          "promise",
+          "snapshots",
+          "events",
+          "claims",
+          "changed",
+          "missing",
+          "hint",
+          "reason",
+          "dynamics"
+        ]
+      },
+      "Issue": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "sheet": {
+            "type": "string"
+          },
+          "row": {
+            "type": "number"
+          },
+          "column": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "sheet",
+          "row",
+          "column",
+          "message"
+        ]
+      },
+      "Import": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "newCount": {
+            "type": "number"
+          },
+          "changedCount": {
+            "type": "number"
+          },
+          "unchangedCount": {
+            "type": "number"
+          },
+          "rejectedCount": {
+            "type": "number"
+          },
+          "issues": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Issue"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "file",
+          "kind",
+          "date",
+          "status",
+          "newCount",
+          "changedCount",
+          "unchangedCount",
+          "rejectedCount",
+          "issues"
+        ]
+      },
+      "State": {
+        "type": "object",
+        "properties": {
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
+          },
+          "clients": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Client"
+            }
+          },
+          "imports": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Import"
+            }
+          },
+          "revision": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "users",
+          "clients",
+          "imports",
+          "revision"
+        ]
+      },
+      "Action": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "login",
+              "logout",
+              "assign",
+              "release",
+              "transfer",
+              "call",
+              "claim",
+              "claimStatus",
+              "publish",
+              "preview",
+              "confirmImport",
+              "userCreate",
+              "userBlock",
+              "userReset",
+              "reset"
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "number"
+          },
+          "login": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "result": {
+            "type": "string"
+          },
+          "comment": {
+            "type": "string"
+          },
+          "agreement": {
+            "type": "string"
+          },
+          "promise": {
+            "type": "string"
+          },
+          "nextAction": {
+            "type": "string"
+          },
+          "due": {
+            "type": "string"
+          },
+          "close": {
+            "type": "boolean"
+          },
+          "letter": {
+            "type": "boolean"
+          },
+          "template": {
+            "type": "string"
+          },
+          "letterDate": {
+            "type": "string"
+          },
+          "letterDue": {
+            "type": "string"
+          },
+          "number": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "incident": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "sanction": {
+            "type": "string"
+          },
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "kind": {
+            "type": "string"
+          },
+          "filename": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "Reply": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "$ref": "#/components/schemas/State"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "state",
+          "message"
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "field": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "field"
+        ]
+      }
+    }
+  }
+}
